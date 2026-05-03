@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #fdfaf4;
+    --bg-card: #ffffff;
+    --text-primary: #1a1510;
+    --text-secondary: #6b6254;
+    --text-muted: #9c9085;
+    --border: #ede8de;
+    --accent: #3b5de8;
+    --accent-light: #e0eaff;
+  }
+
+  .dark {
+    --bg: #0f0e0c;
+    --bg-card: #1a1814;
+    --text-primary: #f0ede4;
+    --text-secondary: #b8b0a0;
+    --text-muted: #7a7468;
+    --border: #2c2820;
+    --accent: #7b93f5;
+    --accent-light: #1e2b5e;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased font-sans;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background-color: #c7d3fd;
+    color: #1a2f8a;
+  }
+
+  .dark ::selection {
+    background-color: #2d4fd6;
+    color: #f0f4ff;
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  .text-primary { color: var(--text-primary); }
+  .text-secondary { color: var(--text-secondary); }
+  .text-muted-custom { color: var(--text-muted); }
+  .border-custom { border-color: var(--border); }
+  .bg-base { background-color: var(--bg); }
+  .bg-card { background-color: var(--bg-card); }
+  .accent { color: var(--accent); }
+  .accent-bg { background-color: var(--accent); }
+  .accent-light-bg { background-color: var(--accent-light); }
+
+  .verse-highlight {
+    background: linear-gradient(135deg, #fef9c3 0%, #fde68a 100%);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .dark .verse-highlight {
+    background: linear-gradient(135deg, #713f12 0%, #92400e 100%);
+    color: #fef3c7;
+  }
+}
+
+/* Poster gradient presets */
+.pg-dawn { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+.pg-ocean { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.pg-forest { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+.pg-rose { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.pg-night { background: linear-gradient(135deg, #2d3561 0%, #c05c7e 100%); }
+.pg-gold { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
+.pg-slate { background: linear-gradient(135deg, #373b44 0%, #4286f4 100%); }
+.pg-sage { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+/* Playing verse highlight */
+@keyframes verseGlow {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(79, 110, 247, 0.08); }
+}
+
+.verse-playing {
+  animation: verseGlow 2s ease-in-out infinite;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  border-radius: 4px;
+}
+
+/* Shimmer skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Gujarati font support */
+.font-gujarati {
+  font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif;
+  line-height: 1.8;
+}
