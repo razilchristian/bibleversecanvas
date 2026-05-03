@@ -7,7 +7,7 @@ const QUICK_TOPICS = [
   'Courage', 'Grace', 'Wisdom', 'Joy', 'Prayer',
 ];
 
-export default function SearchBar({ onSearch, loading, placeholder = 'Search verses, keywords, or references…' }) {
+export default function SearchBar({ onSearch, onChange, loading, placeholder = 'Search verses, keywords, or references…' }) {
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(false);
 
@@ -16,12 +16,20 @@ export default function SearchBar({ onSearch, loading, placeholder = 'Search ver
     if (query.trim()) onSearch(query.trim());
   };
 
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    if (onChange) onChange(val);
+  };
+
   const handleClear = () => {
     setQuery('');
+    if (onChange) onChange('');
   };
 
   const handleTopic = (topic) => {
     setQuery(topic);
+    if (onChange) onChange(topic);
     onSearch(topic);
   };
 
@@ -39,7 +47,7 @@ export default function SearchBar({ onSearch, loading, placeholder = 'Search ver
           <input
             type="text"
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={handleChange}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={placeholder}

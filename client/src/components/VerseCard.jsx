@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Play, Pause, Copy, Share2, Sparkles, Check } from 'lucide-react';
+import { Play, Pause, Copy, Share2, Sparkles, Check, Languages, Loader2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from '../utils/cn';
+import { translateToGujarati } from '../services/bibleService';
 
 export default function VerseCard({ verse, onExplain, showBadge = false, keyword = '' }) {
   const { audioState, toggleAudio } = useApp();
   const [copied, setCopied] = useState(false);
+  const [gujaratiText, setGujaratiText] = useState(null);
+  const [translating, setTranslating] = useState(false);
 
   if (!verse) return null;
 
@@ -13,13 +16,16 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
   const isGujarati = verse.isGujarati || verse.translation === 'GUJ';
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`"${verse.text}" — ${verse.reference} (${verse.translation})`);
+    const textToCopy = gujaratiText 
+      ? `"${verse.text}"\nGujarati: "${gujaratiText}"\n— ${verse.reference} (${verse.translation})`
+      : `"${verse.text}" — ${verse.reference} (${verse.translation})`;
+    navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleShare = () => {
-    const text = `"${verse.text}" — ${verse.reference}`;
+    const text = `"${verse.text}" ${gujaratiText ? `\n\nGujarati: "${gujaratiText}"` : ''} \n\n— ${verse.reference}`;
     if (navigator.share) {
       navigator.share({ title: 'Scripture Verse', text });
     } else {
@@ -32,11 +38,27 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
     toggleAudio(verse.text, verse.reference, isGujarati ? 'gu' : 'en');
   };
 
+  const handleTranslate = async () => {
+    if (gujaratiText) {
+      setGujaratiText(null);
+      return;
+    }
+    setTranslating(true);
+    try {
+      const result = await translateToGujarati(verse.text);
+      setGujaratiText(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   // Highlight keyword in text
-  const renderText = () => {
-    if (!keyword || !keyword.trim()) return verse.text;
+  const renderText = (text) => {
+    if (!keyword || !keyword.trim()) return text;
     const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    const parts = verse.text.split(regex);
+    const parts = text.split(regex);
     return parts.map((part, i) =>
       regex.test(part) ? (
         <mark key={i} className="verse-highlight font-medium">
@@ -97,9 +119,22 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
           'text-xl sm:text-2xl font-serif leading-relaxed text-primary pl-4',
           isGujarati && 'font-gujarati text-lg sm:text-xl'
         )}>
-          {renderText()}
+          {renderText(verse.text)}
         </p>
       </blockquote>
+
+      {/* Gujarati Translation (Dynamic) */}
+      {gujaratiText && (
+        <div className="mb-6 p-4 rounded-xl bg-scripture-50/50 dark:bg-scripture-900/20 border border-scripture-100 dark:border-scripture-800/50 animate-fade-in">
+          <div className="flex items-center gap-2 mb-2 text-scripture-600 dark:text-scripture-400">
+            <Languages size={14} />
+            <span className="text-xs font-bold uppercase tracking-wider">Gujarati Translation</span>
+          </div>
+          <p className="font-gujarati text-lg text-primary leading-relaxed">
+            {gujaratiText}
+          </p>
+        </div>
+      )}
 
       {/* Reference */}
       <p className="font-medium text-secondary text-base mb-6">
@@ -120,6 +155,22 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
           {isPlaying ? <Pause size={14} /> : <Play size={14} />}
           {isPlaying ? 'Pause' : 'Listen'}
         </button>
+
+        {!isGujarati && (
+          <button
+            onClick={handleTranslate}
+            disabled={translating}
+            className={cn(
+              'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border transition-all',
+              gujaratiText 
+                ? 'border-scripture-300 bg-scripture-50 text-scripture-700'
+                : 'border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300'
+            )}
+          >
+            {translating ? <Loader2 size={14} className="animate-spin" /> : <Languages size={14} />}
+            {gujaratiText ? 'Hide Gujarati' : 'Translate to Gujarati'}
+          </button>
+        )}
 
         {onExplain && (
           <button

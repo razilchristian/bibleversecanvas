@@ -16,9 +16,15 @@ export default function SearchPage() {
   const [searched, setSearched] = useState(false);
   const [explainVerse, setExplainVerse] = useState(null);
 
-  const handleSearch = async (q) => {
-    if (!q.trim()) return;
-    setQuery(q);
+  const debouncedQuery = useDebounce(query, 500); // Using 500ms for Gemini-backed search to avoid over-fetching
+
+  useEffect(() => {
+    if (debouncedQuery && debouncedQuery.trim().length > 2) {
+      performSearch(debouncedQuery.trim());
+    }
+  }, [debouncedQuery]);
+
+  const performSearch = async (q) => {
     setLoading(true);
     setError('');
     setSearched(true);
@@ -34,6 +40,10 @@ export default function SearchPage() {
     }
   };
 
+  const handleQueryChange = (q) => {
+    setQuery(q);
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="mb-8 animate-fade-in">
@@ -45,7 +55,8 @@ export default function SearchPage() {
 
       <div className="mb-8">
         <SearchBar
-          onSearch={handleSearch}
+          onSearch={performSearch}
+          onChange={handleQueryChange}
           loading={loading}
           placeholder="Search by keyword or reference…"
         />
@@ -79,13 +90,13 @@ export default function SearchPage() {
       {!loading && results.length > 0 && (
         <div className="space-y-4 animate-fade-in">
           <p className="text-sm text-muted-custom">
-            {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
+            {results.length} result{results.length !== 1 ? 's' : ''} for "{query || debouncedQuery}"
           </p>
           {results.map((verse, i) => (
             <div key={i} className="animate-slide-up" style={{ animationDelay: `${i * 0.05}s` }}>
               <VerseCard
                 verse={verse}
-                keyword={query}
+                keyword={query || debouncedQuery}
                 onExplain={() => setExplainVerse(verse)}
               />
             </div>

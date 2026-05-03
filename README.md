@@ -36,6 +36,23 @@ npm run dev
 npm run build
 ```
 
+### Server (optional)
+
+- **Install & run**: Run server dependencies and start the Express backend:
+
+	```bash
+	cd server && npm install
+	npm run dev
+	```
+
+- **Environment**: Copy `server/.env.example` to `server/.env` and set your Gemini API key:
+
+	```bash
+	GEMINI_API_KEY=your_gemini_api_key_here
+	```
+
+- **Notes**: The server already loads `.env` via `dotenv`; `.env` is ignored by git. On Vercel, set `GEMINI_API_KEY` in project environment variables instead of committing an `.env` file.
+
 ## Deployment (Vercel)
 
 1. Connect your GitHub repo to Vercel
