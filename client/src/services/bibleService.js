@@ -23,6 +23,24 @@ export async function fetchVerse(reference, version = 'KJV') {
     reference: data.reference,
     text: data.text.trim().replace(/\n/g, ' '),
     translation: versionId.toUpperCase(),
+    verses: data.verses || [],
+  };
+}
+
+export async function fetchChapter(book, chapter, version = 'KJV') {
+  const versionId = VERSION_MAP[version]?.id || 'kjv';
+  const url = `${BASE_URL}/${encodeURIComponent(book)}+${chapter}?translation=${versionId}`;
+  
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error('Failed to fetch chapter.');
+  }
+  
+  const data = await res.json();
+  return {
+    reference: data.reference,
+    translation: versionId.toUpperCase(),
+    verses: data.verses || [],
   };
 }
 

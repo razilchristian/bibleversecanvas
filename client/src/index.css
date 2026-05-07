@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --bg: #fdfaf4;
-    --bg-card: #ffffff;
-    --text-primary: #1a1510;
-    --text-secondary: #6b6254;
-    --text-muted: #9c9085;
-    --border: #ede8de;
-    --accent: #3b5de8;
-    --accent-light: #e0eaff;
+    --bg: #faf9f6;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --border: rgba(229, 231, 235, 0.5);
+    --accent: #3b82f6;
+    --accent-light: #eff6ff;
   }
 
   .dark {
-    --bg: #0f0e0c;
-    --bg-card: #1a1814;
-    --text-primary: #f0ede4;
-    --text-secondary: #b8b0a0;
-    --text-muted: #7a7468;
-    --border: #2c2820;
-    --accent: #7b93f5;
-    --accent-light: #1e2b5e;
+    --bg: #030712;
+    --bg-card: rgba(17, 24, 39, 0.7);
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --border: rgba(55, 65, 81, 0.5);
+    --accent: #60a5fa;
+    --accent-light: #1e3a8a;
   }
 
   html {
@@ -33,17 +33,17 @@
     @apply antialiased font-sans;
     background-color: var(--bg);
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   ::selection {
-    background-color: #c7d3fd;
-    color: #1a2f8a;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: var(--accent);
   }
 
   .dark ::selection {
-    background-color: #2d4fd6;
-    color: #f0f4ff;
+    background-color: rgba(96, 165, 250, 0.2);
+    color: var(--accent);
   }
 }
 
@@ -51,8 +51,15 @@
   .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    transition: background-color 0.3s, border-color 0.3s;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    transform: translateY(-1px);
   }
 
   .text-primary { color: var(--text-primary); }

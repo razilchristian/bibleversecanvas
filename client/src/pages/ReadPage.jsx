@@ -1,44 +1,27 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, Play, Pause, Sparkles } from 'lucide-react';
-import { fetchVerse } from '../services/bibleService';
+import { ChevronLeft, ChevronRight, BookOpen, Play, Pause, Sparkles, LayoutGrid } from 'lucide-react';
+import { fetchChapter } from '../services/bibleService';
 import { useApp } from '../context/AppContext';
 import ExplainModal from '../components/ExplainModal';
 import { cn } from '../utils/cn';
-
-// Popular books for quick navigation
-const BOOKS = [
-  { name: 'Genesis', maxChapter: 50 },
-  { name: 'Psalms', maxChapter: 150 },
-  { name: 'Proverbs', maxChapter: 31 },
-  { name: 'Isaiah', maxChapter: 66 },
-  { name: 'Matthew', maxChapter: 28 },
-  { name: 'John', maxChapter: 21 },
-  { name: 'Romans', maxChapter: 16 },
-  { name: 'Philippians', maxChapter: 4 },
-  { name: '1 Corinthians', maxChapter: 16 },
-  { name: 'Hebrews', maxChapter: 13 },
-  { name: 'Revelation', maxChapter: 22 },
-  { name: 'Luke', maxChapter: 24 },
-  { name: 'Acts', maxChapter: 28 },
-  { name: 'James', maxChapter: 5 },
-  { name: 'Ephesians', maxChapter: 6 },
-];
+import { BIBLE_BOOKS } from '../data/bibleData';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ReadPage() {
   const { version, audioState, toggleAudio } = useApp();
-  const [selectedBook, setSelectedBook] = useState(BOOKS[5]); // John
+  const [selectedBook, setSelectedBook] = useState(BIBLE_BOOKS.find(b => b.name === 'John'));
   const [chapter, setChapter] = useState(3);
   const [passage, setPassage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [explainVerse, setExplainVerse] = useState(null);
+  const [showBookSelector, setShowBookSelector] = useState(false);
 
   const load = async () => {
     setLoading(true);
     setError('');
     try {
-      const ref = `${selectedBook.name} ${chapter}`;
-      const data = await fetchVerse(ref, version);
+      const data = await fetchChapter(selectedBook.name, chapter, version);
       setPassage(data);
     } catch (e) {
       setError(e.message || 'Failed to load chapter.');
@@ -50,22 +33,24 @@ export default function ReadPage() {
   useEffect(() => { load(); }, [selectedBook, chapter, version]);
 
   const prevChapter = () => {
-    if (chapter > 1) setChapter(c => c - 1);
-    else {
-      const idx = BOOKS.indexOf(selectedBook);
+    if (chapter > 1) {
+      setChapter(c => c - 1);
+    } else {
+      const idx = BIBLE_BOOKS.findIndex(b => b.name === selectedBook.name);
       if (idx > 0) {
-        setSelectedBook(BOOKS[idx - 1]);
-        setChapter(BOOKS[idx - 1].maxChapter);
+        setSelectedBook(BIBLE_BOOKS[idx - 1]);
+        setChapter(BIBLE_BOOKS[idx - 1].chapters);
       }
     }
   };
 
   const nextChapter = () => {
-    if (chapter < selectedBook.maxChapter) setChapter(c => c + 1);
-    else {
-      const idx = BOOKS.indexOf(selectedBook);
-      if (idx < BOOKS.length - 1) {
-        setSelectedBook(BOOKS[idx + 1]);
+    if (chapter < selectedBook.chapters) {
+      setChapter(c => c + 1);
+    } else {
+      const idx = BIBLE_BOOKS.findIndex(b => b.name === selectedBook.name);
+      if (idx < BIBLE_BOOKS.length - 1) {
+        setSelectedBook(BIBLE_BOOKS[idx + 1]);
         setChapter(1);
       }
     }
@@ -93,25 +78,71 @@ export default function ReadPage() {
         <p className="text-secondary text-sm">Browse the Bible by book and chapter</p>
       </div>
 
-      {/* Book Selector */}
-      <div className="mb-4 animate-fade-in">
-        <div className="flex flex-wrap gap-2">
-          {BOOKS.map(book => (
-            <button
-              key={book.name}
-              onClick={() => { setSelectedBook(book); setChapter(1); }}
-              className={cn(
-                'text-xs px-3 py-1.5 rounded-lg border font-medium transition-all',
-                selectedBook.name === book.name
-                  ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
-                  : 'border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300'
-              )}
-            >
-              {book.name}
-            </button>
-          ))}
-        </div>
+
+      {/* Book Selector Toggle */}
+      <div className="mb-6 animate-fade-in">
+        <button
+          onClick={() => setShowBookSelector(!showBookSelector)}
+          className="flex items-center gap-2 px-4 py-2 bg-card border border-custom rounded-xl shadow-sm text-primary hover:border-scripture-400 transition-colors"
+        >
+          <LayoutGrid size={18} className="text-scripture-500" />
+          <span className="font-medium">Browse All 66 Books</span>
+        </button>
       </div>
+
+      <AnimatePresence>
+        {showBookSelector && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden mb-8"
+          >
+            <div className="card p-6 border border-custom shadow-sm bg-base/50 backdrop-blur-sm">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xs font-bold text-muted-custom uppercase tracking-wider mb-4 border-b border-custom pb-2">Old Testament</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {BIBLE_BOOKS.filter(b => b.testament === 'OT').map(book => (
+                      <button
+                        key={book.name}
+                        onClick={() => { setSelectedBook(book); setChapter(1); setShowBookSelector(false); }}
+                        className={cn(
+                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-scripture-300',
+                          selectedBook.name === book.name
+                            ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                            : 'border-transparent text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
+                        )}
+                      >
+                        {book.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-muted-custom uppercase tracking-wider mb-4 border-b border-custom pb-2">New Testament</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {BIBLE_BOOKS.filter(b => b.testament === 'NT').map(book => (
+                      <button
+                        key={book.name}
+                        onClick={() => { setSelectedBook(book); setChapter(1); setShowBookSelector(false); }}
+                        className={cn(
+                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-scripture-300',
+                          selectedBook.name === book.name
+                            ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                            : 'border-transparent text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
+                        )}
+                      >
+                        {book.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Navigation */}
       <div className="card px-4 py-3 mb-6 flex items-center justify-between animate-fade-in">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Clock, X } from 'lucide-react';
 import { searchVerses } from '../services/bibleService';
 import { useApp } from '../context/AppContext';
 import { useDebounce } from '../hooks/useDebounce';
@@ -15,12 +15,40 @@ export default function SearchPage() {
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
   const [explainVerse, setExplainVerse] = useState(null);
+  const [recentSearches, setRecentSearches] = useState([]);
 
   const debouncedQuery = useDebounce(query, 300); 
 
   useEffect(() => {
+    const saved = localStorage.getItem('scripture_recent_searches');
+    if (saved) {
+      try {
+        setRecentSearches(JSON.parse(saved));
+      } catch (e) {}
+    }
+  }, []);
+
+  const saveRecentSearch = (q) => {
+    if (!q || q.trim().length < 2) return;
+    const term = q.trim().toLowerCase();
+    const updated = [term, ...recentSearches.filter(s => s !== term)].slice(0, 8);
+    setRecentSearches(updated);
+    localStorage.setItem('scripture_recent_searches', JSON.stringify(updated));
+  };
+
+  const removeRecentSearch = (term, e) => {
+    e.stopPropagation();
+    const updated = recentSearches.filter(s => s !== term);
+    setRecentSearches(updated);
+    localStorage.setItem('scripture_recent_searches', JSON.stringify(updated));
+  };
+
+  useEffect(() => {
     if (debouncedQuery && debouncedQuery.trim().length > 2) {
       performSearch(debouncedQuery.trim());
+    } else if (!debouncedQuery) {
+      setResults([]);
+      setSearched(false);
     }
   }, [debouncedQuery]);
 
@@ -28,6 +56,7 @@ export default function SearchPage() {
     setLoading(true);
     setError('');
     setSearched(true);
+    saveRecentSearch(q);
 
     try {
       const res = await searchVerses(q, version);
@@ -57,6 +86,7 @@ export default function SearchPage() {
         <SearchBar
           onSearch={performSearch}
           onChange={handleQueryChange}
+          value={query}
           loading={loading}
           placeholder="Search by keyword or reference…"
         />
@@ -113,13 +143,40 @@ export default function SearchPage() {
         </div>
       )}
 
-      {!searched && !loading && (
-        <div className="text-center py-16 text-secondary animate-fade-in">
-          <p className="text-4xl mb-4">🔍</p>
-          <p className="font-medium mb-1">Search the Scriptures</p>
-          <p className="text-sm text-muted-custom">
-            Try "love", "faith", "Psalm 23:1", or "Philippians 4:13"
-          </p>
+      {!searched && !loading && !query && (
+        <div className="animate-fade-in">
+          {recentSearches.length > 0 ? (
+            <div>
+              <h3 className="text-sm font-semibold text-secondary mb-3 flex items-center gap-2">
+                <Clock size={16} /> Recent Searches
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {recentSearches.map(term => (
+                  <button
+                    key={term}
+                    onClick={() => { setQuery(term); performSearch(term); }}
+                    className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-custom bg-card text-sm text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+                  >
+                    {term}
+                    <span 
+                      onClick={(e) => removeRecentSearch(term, e)}
+                      className="opacity-0 group-hover:opacity-100 p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all"
+                    >
+                      <X size={12} />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-16 text-secondary">
+              <p className="text-4xl mb-4">🔍</p>
+              <p className="font-medium mb-1">Search the Scriptures</p>
+              <p className="text-sm text-muted-custom">
+                Try "love", "faith", "Psalm 23:1", or "Philippians 4:13"
+              </p>
+            </div>
+          )}
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Moon, Sun, BookOpen, Search, Home, Image, Menu, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VERSION_MAP } from '../services/bibleService';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
 
 export default function Navbar() {
@@ -38,7 +39,7 @@ export default function Navbar() {
                 'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all',
                 location.pathname === to
                   ? 'bg-scripture-50 dark:bg-scripture-900/40 text-scripture-700 dark:text-scripture-400'
-                  : 'text-secondary hover:text-primary hover:bg-parchment-100 dark:hover:bg-ink-800'
+                  : 'text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
               )}
             >
               <Icon size={15} />
@@ -53,7 +54,7 @@ export default function Navbar() {
           <select
             value={version}
             onChange={e => setVersion(e.target.value)}
-            className="hidden sm:block text-xs font-medium px-3 py-1.5 rounded-lg border border-custom bg-card text-primary cursor-pointer focus:outline-none focus:ring-2 focus:ring-scripture-500/30 transition"
+            className="hidden sm:block text-xs font-medium px-3 py-1.5 rounded-lg border border-custom bg-card text-primary cursor-pointer focus:outline-none focus:ring-2 focus:ring-scripture-500/30 transition shadow-sm hover:border-scripture-300"
             aria-label="Bible version"
           >
             {Object.entries(VERSION_MAP).map(([key, v]) => (
@@ -64,7 +65,7 @@ export default function Navbar() {
           {/* Dark Mode */}
           <button
             onClick={() => setDarkMode(d => !d)}
-            className="w-9 h-9 rounded-lg border border-custom bg-card flex items-center justify-center text-secondary hover:text-primary transition-all hover:border-scripture-300"
+            className="w-9 h-9 rounded-lg border border-custom bg-card flex items-center justify-center text-secondary hover:text-primary transition-all hover:border-scripture-300 shadow-sm"
             aria-label="Toggle dark mode"
           >
             {darkMode ? <Sun size={16} /> : <Moon size={16} />}
@@ -73,45 +74,54 @@ export default function Navbar() {
           {/* Mobile Menu */}
           <button
             onClick={() => setMobileOpen(m => !m)}
-            className="md:hidden w-9 h-9 rounded-lg border border-custom bg-card flex items-center justify-center text-secondary"
+            className="md:hidden w-9 h-9 rounded-lg border border-custom bg-card flex items-center justify-center text-secondary shadow-sm"
           >
             {mobileOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-custom bg-base/95 backdrop-blur-xl px-4 py-3 space-y-1 animate-fade-in">
-          {links.map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
-                location.pathname === to
-                  ? 'bg-scripture-50 dark:bg-scripture-900/40 text-scripture-700 dark:text-scripture-400'
-                  : 'text-secondary hover:text-primary hover:bg-parchment-100 dark:hover:bg-ink-800'
-              )}
-            >
-              <Icon size={16} />
-              {label}
-            </Link>
-          ))}
-          <div className="pt-2 border-t border-custom">
-            <select
-              value={version}
-              onChange={e => setVersion(e.target.value)}
-              className="w-full text-sm px-3 py-2 rounded-lg border border-custom bg-card text-primary focus:outline-none"
-            >
-              {Object.entries(VERSION_MAP).map(([key, v]) => (
-                <option key={key} value={key}>{v.short} — {v.name}</option>
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden overflow-hidden border-t border-custom bg-base/95 backdrop-blur-xl"
+          >
+            <div className="px-4 py-3 space-y-1">
+              {links.map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                    location.pathname === to
+                      ? 'bg-scripture-50 dark:bg-scripture-900/40 text-scripture-700 dark:text-scripture-400'
+                      : 'text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
+                  )}
+                >
+                  <Icon size={16} />
+                  {label}
+                </Link>
               ))}
-            </select>
-          </div>
-        </div>
-      )}
+              <div className="pt-2 border-t border-custom mt-2">
+                <select
+                  value={version}
+                  onChange={e => setVersion(e.target.value)}
+                  className="w-full text-sm px-3 py-2.5 rounded-lg border border-custom bg-card text-primary focus:outline-none"
+                >
+                  {Object.entries(VERSION_MAP).map(([key, v]) => (
+                    <option key={key} value={key}>{v.short} — {v.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

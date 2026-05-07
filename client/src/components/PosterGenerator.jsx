@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Download, Palette, Type, Sun, Moon, Loader2 } from 'lucide-react';
+import { Download, Palette, Type, Sun, Moon, Loader2, Upload, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { cn } from '../utils/cn';
 import { translateToGujarati } from '../services/aiService';
@@ -13,30 +13,10 @@ const POSTER_BACKGROUNDS = [
   { id: 'gold', cls: 'pg-gold', name: 'Gold' },
   { id: 'slate', cls: 'pg-slate', name: 'Slate' },
   { id: 'sage', cls: 'pg-sage', name: 'Sage' },
-  {
-    id: 'nature',
-    cls: 'bg-cover bg-center',
-    style: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=800',
-    name: 'Nature',
-  },
-  {
-    id: 'sky',
-    cls: 'bg-cover bg-center',
-    style: 'https://images.unsplash.com/photo-1513002749550-c59d220b8e42?auto=format&fit=crop&q=80&w=800',
-    name: 'Sky',
-  },
-  {
-    id: 'mountains',
-    cls: 'bg-cover bg-center',
-    style: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800',
-    name: 'Mountains',
-  },
-  {
-    id: 'stars',
-    cls: 'bg-cover bg-center',
-    style: 'https://images.unsplash.com/photo-1511884641892-0f6695b1dc47?auto=format&fit=crop&q=80&w=800',
-    name: 'Stars',
-  },
+  { id: 'nature', cls: 'bg-cover bg-center', style: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=800', name: 'Nature' },
+  { id: 'sky', cls: 'bg-cover bg-center', style: 'https://images.unsplash.com/photo-1513002749550-c59d220b8e42?auto=format&fit=crop&q=80&w=800', name: 'Sky' },
+  { id: 'mountains', cls: 'bg-cover bg-center', style: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800', name: 'Mountains' },
+  { id: 'stars', cls: 'bg-cover bg-center', style: 'https://images.unsplash.com/photo-1511884641892-0f6695b1dc47?auto=format&fit=crop&q=80&w=800', name: 'Stars' },
 ];
 
 const FONTS = [
@@ -47,8 +27,12 @@ const FONTS = [
 
 export default function PosterGenerator({ verse }) {
   const [bg, setBg] = useState(POSTER_BACKGROUNDS[0]);
+  const [customImage, setCustomImage] = useState(null);
   const [font, setFont] = useState(FONTS[0]);
   const [textColor, setTextColor] = useState('light');
+  const [textAlign, setTextAlign] = useState('center');
+  const [fontSize, setFontSize] = useState(24);
+  const [blurOverlay, setBlurOverlay] = useState(40);
   const [downloading, setDownloading] = useState(false);
   
   // Gujarati translation state
@@ -56,11 +40,11 @@ export default function PosterGenerator({ verse }) {
   const [translating, setTranslating] = useState(false);
   
   const posterRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const textCls = textColor === 'light' ? 'text-white' : 'text-slate-900';
 
   useEffect(() => {
-    // If verse changes and it's not natively Gujarati, translate it
     if (verse && !verse.isGujarati && verse.translation !== 'GUJ') {
       const getTranslation = async () => {
         setTranslating(true);
@@ -76,7 +60,6 @@ export default function PosterGenerator({ verse }) {
       };
       getTranslation();
     } else {
-      // If it is already Gujarati, don't show dual translation, or just show it once
       setGujaratiText('');
     }
   }, [verse]);
@@ -104,39 +87,49 @@ export default function PosterGenerator({ verse }) {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setCustomImage(imageUrl);
+      setBg({ id: 'custom', cls: 'bg-cover bg-center', style: imageUrl, name: 'Custom' });
+    }
+  };
+
+  const alignCls = textAlign === 'center' ? 'items-center text-center' : textAlign === 'left' ? 'items-start text-left' : 'items-end text-right';
+
   return (
-    <div className="grid lg:grid-cols-5 gap-8">
+    <div className="grid lg:grid-cols-12 gap-8">
       {/* Poster Preview */}
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-7 flex justify-center">
         <div
           ref={posterRef}
           className={cn(
-            'relative w-full aspect-[3/4] rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 sm:p-12',
+            'relative w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden flex flex-col justify-center p-8 sm:p-12 shadow-2xl transition-all',
             bg.cls
           )}
           style={bg.style ? { backgroundImage: `url(${bg.style})` } : {}}
         >
-          {bg.style && (
-            <div className="absolute inset-0 bg-black/40" />
+          {/* Overlay */}
+          {(bg.style || customImage) && (
+            <div className="absolute inset-0 bg-black transition-opacity" style={{ opacity: blurOverlay / 100 }} />
           )}
-          <div className="relative z-10 text-center w-full max-w-sm flex flex-col items-center">
+          
+          <div className={cn("relative z-10 w-full flex flex-col", alignCls)}>
             {/* Decorative */}
             <div className={cn('text-4xl mb-6 opacity-80', textCls)}>✦</div>
 
             {/* English Verse Text */}
-            <p className={cn(
-              'text-xl sm:text-2xl leading-relaxed',
-              font.cls,
-              textCls,
-              gujaratiText ? 'mb-4' : 'mb-6',
-              verse.isGujarati && 'font-gujarati text-lg'
-            )}>
+            <p 
+              className={cn('leading-relaxed', font.cls, textCls, gujaratiText ? 'mb-4' : 'mb-6', verse.isGujarati && 'font-gujarati')}
+              style={{ fontSize: `${fontSize}px` }}
+            >
               "{verse.text}"
             </p>
 
             {/* Loading / Gujarati Verse Text */}
             {translating && !verse.isGujarati && (
-              <div className={cn('flex items-center justify-center gap-2 mb-6 text-sm opacity-80', textCls)}>
+              <div className={cn('flex items-center gap-2 mb-6 text-sm opacity-80', textCls)}>
                 <Loader2 size={14} className="animate-spin" />
                 Translating...
               </div>
@@ -144,24 +137,25 @@ export default function PosterGenerator({ verse }) {
             
             {!translating && gujaratiText && (
               <div className={cn('mb-6', textCls)}>
-                <div className="w-12 h-[1px] bg-current opacity-30 mx-auto mb-4"></div>
-                <p className="font-gujarati text-lg sm:text-xl leading-relaxed">
+                <div className={cn("h-[1px] bg-current opacity-30 mb-4", textAlign === 'center' ? 'mx-auto w-12' : textAlign === 'left' ? 'mr-auto w-12' : 'ml-auto w-12')}></div>
+                <p 
+                  className="font-gujarati leading-relaxed"
+                  style={{ fontSize: `${Math.max(fontSize - 4, 16)}px` }}
+                >
                   {gujaratiText}
                 </p>
               </div>
             )}
 
             {/* Reference */}
-            <p className={cn('text-base font-medium tracking-wide opacity-90', textCls)}>
+            <p className={cn('font-medium tracking-wide opacity-90', textCls)} style={{ fontSize: `${Math.max(fontSize - 8, 14)}px` }}>
               — {verse.reference}
             </p>
 
             {/* Translation badge */}
             <div className={cn(
               'inline-block mt-4 text-xs px-3 py-1 rounded-full border opacity-70',
-              textColor === 'light'
-                ? 'border-white/30 text-white'
-                : 'border-black/20 text-slate-700'
+              textColor === 'light' ? 'border-white/30 text-white' : 'border-black/20 text-slate-700'
             )}>
               {verse.translation}
             </div>
@@ -170,92 +164,134 @@ export default function PosterGenerator({ verse }) {
       </div>
 
       {/* Controls */}
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-5 space-y-8 bg-card/50 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-custom shadow-sm">
+        
+        {/* Background Section */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary mb-3 flex items-center gap-2 uppercase tracking-wide">
-            <Palette size={14} />
+          <h3 className="text-sm font-semibold text-secondary mb-4 flex items-center gap-2 uppercase tracking-wider">
+            <Palette size={16} className="text-scripture-500" />
             Background
           </h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-5 gap-2 mb-4">
             {POSTER_BACKGROUNDS.map(b => (
               <button
                 key={b.id}
-                onClick={() => setBg(b)}
+                onClick={() => { setBg(b); setCustomImage(null); }}
                 title={b.name}
                 className={cn(
-                  'aspect-square rounded-xl overflow-hidden border-2 transition-all',
+                  'aspect-square rounded-xl overflow-hidden border-2 transition-all hover:scale-105',
                   b.cls,
-                  bg.id === b.id ? 'border-scripture-500 scale-105 shadow-md' : 'border-transparent hover:scale-105'
+                  bg.id === b.id ? 'border-scripture-500 scale-105 shadow-md' : 'border-transparent'
                 )}
-                style={b.style ? {
-                  backgroundImage: `url(${b.style})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                } : {}}
+                style={b.style ? { backgroundImage: `url(${b.style})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
               />
             ))}
           </div>
+          
+          <div className="flex gap-2 items-center">
+            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-custom bg-base hover:bg-parchment-50 dark:hover:bg-ink-800 transition-colors text-sm font-medium text-primary"
+            >
+              <Upload size={16} />
+              Upload Custom Image
+            </button>
+          </div>
+          
+          {(bg.style || customImage) && (
+            <div className="mt-4">
+              <label className="text-xs text-secondary mb-2 flex justify-between">
+                <span>Overlay Darkness</span>
+                <span>{blurOverlay}%</span>
+              </label>
+              <input 
+                type="range" min="0" max="90" value={blurOverlay} onChange={(e) => setBlurOverlay(e.target.value)}
+                className="w-full accent-scripture-500"
+              />
+            </div>
+          )}
         </div>
 
-        <div>
-          <h3 className="text-sm font-semibold text-secondary mb-3 flex items-center gap-2 uppercase tracking-wide">
-            <Type size={14} />
-            Font Style
+        {/* Typography Section */}
+        <div className="pt-6 border-t border-custom">
+          <h3 className="text-sm font-semibold text-secondary mb-4 flex items-center gap-2 uppercase tracking-wider">
+            <Type size={16} className="text-scripture-500" />
+            Typography
           </h3>
-          <div className="flex flex-wrap gap-2">
-            {FONTS.map(f => (
-              <button
-                key={f.id}
-                onClick={() => setFont(f)}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm border transition-all',
-                  f.cls,
-                  font.id === f.id
-                    ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
-                    : 'border-custom bg-card text-secondary hover:text-primary'
-                )}
-              >
-                {f.name}
-              </button>
-            ))}
+          
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {FONTS.map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => setFont(f)}
+                  className={cn(
+                    'px-4 py-2 rounded-xl text-sm border transition-all',
+                    f.cls,
+                    font.id === f.id
+                      ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                      : 'border-custom bg-base text-secondary hover:text-primary'
+                  )}
+                >
+                  {f.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <label className="text-xs text-secondary mb-2 flex justify-between">
+                  <span>Font Size</span>
+                  <span>{fontSize}px</span>
+                </label>
+                <input 
+                  type="range" min="16" max="40" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))}
+                  className="w-full accent-scripture-500"
+                />
+              </div>
+              
+              <div className="flex bg-base rounded-lg border border-custom p-1">
+                <button onClick={() => setTextAlign('left')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'left' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-600' : 'text-secondary')}><AlignLeft size={16}/></button>
+                <button onClick={() => setTextAlign('center')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'center' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-600' : 'text-secondary')}><AlignCenter size={16}/></button>
+                <button onClick={() => setTextAlign('right')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'right' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-600' : 'text-secondary')}><AlignRight size={16}/></button>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              {['light', 'dark'].map(c => (
+                <button
+                  key={c}
+                  onClick={() => setTextColor(c)}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm border transition-all',
+                    textColor === c
+                      ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                      : 'border-custom bg-base text-secondary hover:text-primary'
+                  )}
+                >
+                  {c === 'light' ? <Sun size={14} /> : <Moon size={14} />}
+                  {c === 'light' ? 'Light Text' : 'Dark Text'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div>
-          <h3 className="text-sm font-semibold text-secondary mb-3 flex items-center gap-2 uppercase tracking-wide">
-            Text Color
-          </h3>
-          <div className="flex gap-2">
-            {['light', 'dark'].map(c => (
-              <button
-                key={c}
-                onClick={() => setTextColor(c)}
-                className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-lg text-sm border transition-all',
-                  textColor === c
-                    ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
-                    : 'border-custom bg-card text-secondary hover:text-primary'
-                )}
-              >
-                {c === 'light' ? <Sun size={13} /> : <Moon size={13} />}
-                {c === 'light' ? 'White' : 'Dark'}
-              </button>
-            ))}
-          </div>
+        {/* Download Button */}
+        <div className="pt-6 border-t border-custom">
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-medium text-base bg-scripture-600 hover:bg-scripture-700 dark:bg-scripture-500 dark:hover:bg-scripture-600 text-white transition-all shadow-md hover:shadow-lg disabled:opacity-60"
+          >
+            <Download size={18} />
+            {downloading ? 'Generating High-Res Image…' : 'Download Poster (PNG)'}
+          </button>
+          <p className="text-xs text-muted-custom text-center mt-3">
+            High resolution (3x) — perfect for Instagram Stories
+          </p>
         </div>
-
-        <button
-          onClick={handleDownload}
-          disabled={downloading}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-medium text-sm bg-scripture-700 hover:bg-scripture-900 dark:bg-scripture-500 dark:hover:bg-scripture-600 text-white transition-all shadow-sm disabled:opacity-60"
-        >
-          <Download size={15} />
-          {downloading ? 'Generating…' : 'Download Poster (PNG)'}
-        </button>
-
-        <p className="text-xs text-muted-custom text-center">
-          High resolution 3x PNG — perfect for sharing
-        </p>
       </div>
     </div>
   );
