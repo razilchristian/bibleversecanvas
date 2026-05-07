@@ -35,3 +35,20 @@ export const findReferencesByKeyword = async (keyword) => {
     return ['John 3:16', 'Psalm 23:1']; // Fallback
   }
 };
+
+export const explainVerseText = async (text, reference, lang) => {
+  try {
+    const languageStr = lang === 'gu' ? 'Gujarati' : 'English';
+    const prompt = `Provide a short, comforting, and spiritual explanation of the following Bible verse. Explain it in ${languageStr}. 
+    
+Verse: "${text}"
+Reference: ${reference}
+
+Explanation:`;
+    const result = await model.generateContent(prompt);
+    return result.response.text().trim();
+  } catch (e) {
+    console.error('Gemini Explain Error:', e);
+    throw new Error('Explanation failed');
+  }
+};
