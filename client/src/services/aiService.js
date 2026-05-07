@@ -26,3 +26,30 @@ export async function translateToGujarati(text) {
     throw error;
   }
 }
+
+export async function explainVerse(text, reference, lang = 'en') {
+  if (!text || !reference) {
+    throw new Error("Text and reference are required for explanation.");
+  }
+
+  const url = `${SERVER_URL}/explain`;
+  
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, reference, lang }),
+    });
+    
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Explanation failed from backend');
+    }
+    
+    const data = await res.json();
+    return data.explanation;
+  } catch (error) {
+    console.error("AI Service Explain Error:", error);
+    throw error;
+  }
+}
