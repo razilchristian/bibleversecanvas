@@ -6,7 +6,12 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 export const translateToGujarati = async (text) => {
   try {
-    const prompt = `Translate this Bible verse into natural Gujarati language while preserving spiritual meaning: \n\n"${text}"`;
+    const prompt = `Translate this Bible verse into natural Gujarati language while preserving spiritual meaning and readability.
+
+Bible Verse:
+"${text}"
+
+Return ONLY the Gujarati translation.`;
     const result = await model.generateContent(prompt);
     return result.response.text().trim();
   } catch (e) {

@@ -39,23 +39,7 @@ export async function searchVerses(query, version = 'KJV') {
   return await res.json();
 }
 
-export async function translateToGujarati(text) {
-  const url = `${SERVER_URL}/translate`;
-  
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text }),
-  });
-  
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Translation failed');
-  }
-  
-  const data = await res.json();
-  return data.translation;
-}
+
 
 const VERSE_OF_DAY_POOL = [
   'John 3:16', 'Jeremiah 29:11', 'Romans 8:28', 'Philippians 4:13',

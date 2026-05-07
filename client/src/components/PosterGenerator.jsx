@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
-import { Download, Palette, Type, Sun, Moon } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Download, Palette, Type, Sun, Moon, Loader2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { cn } from '../utils/cn';
+import { translateToGujarati } from '../services/aiService';
 
 const POSTER_BACKGROUNDS = [
   { id: 'dawn', cls: 'pg-dawn', name: 'Dawn' },
@@ -49,12 +50,40 @@ export default function PosterGenerator({ verse }) {
   const [font, setFont] = useState(FONTS[0]);
   const [textColor, setTextColor] = useState('light');
   const [downloading, setDownloading] = useState(false);
+  
+  // Gujarati translation state
+  const [gujaratiText, setGujaratiText] = useState('');
+  const [translating, setTranslating] = useState(false);
+  
   const posterRef = useRef(null);
 
   const textCls = textColor === 'light' ? 'text-white' : 'text-slate-900';
 
+  useEffect(() => {
+    // If verse changes and it's not natively Gujarati, translate it
+    if (verse && !verse.isGujarati && verse.translation !== 'GUJ') {
+      const getTranslation = async () => {
+        setTranslating(true);
+        try {
+          const translation = await translateToGujarati(verse.text);
+          setGujaratiText(translation);
+        } catch (error) {
+          console.error("Failed to translate verse for poster:", error);
+          setGujaratiText('');
+        } finally {
+          setTranslating(false);
+        }
+      };
+      getTranslation();
+    } else {
+      // If it is already Gujarati, don't show dual translation, or just show it once
+      setGujaratiText('');
+    }
+  }, [verse]);
+
   const handleDownload = async () => {
     if (!posterRef.current) return;
+    if (translating) return; // Prevent download while translating
     setDownloading(true);
     try {
       const canvas = await html2canvas(posterRef.current, {
@@ -90,19 +119,37 @@ export default function PosterGenerator({ verse }) {
           {bg.style && (
             <div className="absolute inset-0 bg-black/40" />
           )}
-          <div className="relative z-10 text-center max-w-sm">
+          <div className="relative z-10 text-center w-full max-w-sm flex flex-col items-center">
             {/* Decorative */}
             <div className={cn('text-4xl mb-6 opacity-80', textCls)}>✦</div>
 
-            {/* Verse Text */}
+            {/* English Verse Text */}
             <p className={cn(
-              'text-xl sm:text-2xl leading-relaxed mb-6',
+              'text-xl sm:text-2xl leading-relaxed',
               font.cls,
               textCls,
+              gujaratiText ? 'mb-4' : 'mb-6',
               verse.isGujarati && 'font-gujarati text-lg'
             )}>
               "{verse.text}"
             </p>
+
+            {/* Loading / Gujarati Verse Text */}
+            {translating && !verse.isGujarati && (
+              <div className={cn('flex items-center justify-center gap-2 mb-6 text-sm opacity-80', textCls)}>
+                <Loader2 size={14} className="animate-spin" />
+                Translating...
+              </div>
+            )}
+            
+            {!translating && gujaratiText && (
+              <div className={cn('mb-6', textCls)}>
+                <div className="w-12 h-[1px] bg-current opacity-30 mx-auto mb-4"></div>
+                <p className="font-gujarati text-lg sm:text-xl leading-relaxed">
+                  {gujaratiText}
+                </p>
+              </div>
+            )}
 
             {/* Reference */}
             <p className={cn('text-base font-medium tracking-wide opacity-90', textCls)}>

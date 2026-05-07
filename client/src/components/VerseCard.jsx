@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Play, Pause, Copy, Share2, Sparkles, Check, Languages, Loader2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { cn } from '../utils/cn';
-import { translateToGujarati } from '../services/bibleService';
+import { translateToGujarati } from '../services/aiService';
 
 export default function VerseCard({ verse, onExplain, showBadge = false, keyword = '' }) {
   const { audioState, toggleAudio } = useApp();

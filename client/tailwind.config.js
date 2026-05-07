@@ -11,6 +11,7 @@ export default {
         serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
         display: ['"Playfair Display"', 'Georgia', 'serif'],
+        gujarati: ['"Hind Vadodara"', '"Mukta Vaani"', '"Noto Sans Gujarati"', 'sans-serif'],
       },
       colors: {
         parchment: {
