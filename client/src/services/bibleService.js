@@ -1,5 +1,5 @@
 const BASE_URL = 'https://bible-api.com';
-const SERVER_URL = 'http://localhost:5000/api';
+const SERVER_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const VERSION_MAP = {
   KJV: { id: 'kjv', name: 'King James Version', short: 'KJV', lang: 'en' },

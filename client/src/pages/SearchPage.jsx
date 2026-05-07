@@ -16,7 +16,7 @@ export default function SearchPage() {
   const [searched, setSearched] = useState(false);
   const [explainVerse, setExplainVerse] = useState(null);
 
-  const debouncedQuery = useDebounce(query, 500); // Using 500ms for Gemini-backed search to avoid over-fetching
+  const debouncedQuery = useDebounce(query, 300); 
 
   useEffect(() => {
     if (debouncedQuery && debouncedQuery.trim().length > 2) {
