@@ -1,8 +1,18 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import 'dotenv/config';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy-key');
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+let genAI = null;
+let model = null;
+
+const getModel = () => {
+  if (!model) {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("Missing GEMINI_API_KEY");
+    }
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+  }
+  return model;
+};
 
 export const translateToGujarati = async (text) => {
   try {
@@ -12,7 +22,7 @@ Bible Verse:
 "${text}"
 
 Return ONLY the Gujarati translation.`;
-    const result = await model.generateContent(prompt);
+    const result = await getModel().generateContent(prompt);
     return result.response.text().trim();
   } catch (e) {
     console.error('Gemini Translation Error:', e);
@@ -26,7 +36,7 @@ export const findReferencesByKeyword = async (keyword) => {
     Return ONLY the references in a JSON array format like this: ["John 3:16", "Romans 8:28"]. 
     No other text.`;
 
-    const result = await model.generateContent(prompt);
+    const result = await getModel().generateContent(prompt);
     const text = result.response.text();
     const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleaned);
@@ -45,7 +55,7 @@ Verse: "${text}"
 Reference: ${reference}
 
 Explanation:`;
-    const result = await model.generateContent(prompt);
+    const result = await getModel().generateContent(prompt);
     return result.response.text().trim();
   } catch (e) {
     console.error('Gemini Explain Error:', e);

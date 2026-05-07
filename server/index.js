@@ -1,7 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import 'dotenv/config';
 import apiRoutes from './routes/api.js';
+
+// Validate environment variables strictly
+if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('AIzaSyDlf7U')) {
+  throw new Error("Missing or invalid GEMINI_API_KEY in server/.env file. Please add a real key.");
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,7 +33,4 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('AIzaSyDlf7U')) {
-    console.warn('⚠️  WARNING: Using placeholder GEMINI_API_KEY. Features will fail.');
-  }
 });
