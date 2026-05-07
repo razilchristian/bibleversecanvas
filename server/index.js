@@ -6,8 +6,8 @@ import cors from 'cors';
 import apiRoutes from './routes/api.js';
 
 // Validate environment variables strictly
-if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('AIzaSyDlf7U')) {
-  throw new Error("Missing or invalid GEMINI_API_KEY in server/.env file. Please add a real key.");
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error("Missing GEMINI_API_KEY in server/.env file.");
 }
 
 const app = express();
