@@ -1,5 +1,6 @@
 const BASE_URL = 'https://bible-api.com';
-const SERVER_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const SERVER_URL = `${API_URL}/api`;
 
 export const VERSION_MAP = {
   KJV: { id: 'kjv', name: 'King James Version', short: 'KJV', lang: 'en' },
@@ -12,51 +13,75 @@ export async function fetchVerse(reference, version = 'KJV') {
   const versionId = VERSION_MAP[version]?.id || 'kjv';
   const url = `${SERVER_URL}/verse?ref=${encodeURIComponent(reference)}&version=${versionId}`;
   
-  const res = await fetch(url);
-  if (!res.ok) {
-    if (res.status === 404) throw new Error('Verse not found. Try a reference like "John 3:16"');
-    throw new Error('Failed to fetch verse.');
+  console.log('[DEBUG] Fetching Verse:', url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error('[DEBUG] Fetch Verse Failed:', res.status, res.statusText);
+      if (res.status === 404) throw new Error('Verse not found. Try a reference like "John 3:16"');
+      throw new Error('Failed to fetch verse.');
+    }
+    
+    const data = await res.json();
+    console.log('[DEBUG] Verse Data Response:', Object.keys(data));
+    return {
+      reference: data.reference,
+      text: data.text?.trim().replace(/\n/g, ' ') || '',
+      translation: versionId.toUpperCase(),
+      verses: data.verses || [],
+      isGujarati: data.isGujarati || false,
+    };
+  } catch (error) {
+    console.error('[DEBUG] Fetch Verse Error Caught:', error.message);
+    throw error;
   }
-  
-  const data = await res.json();
-  return {
-    reference: data.reference,
-    text: data.text?.trim().replace(/\n/g, ' ') || '',
-    translation: versionId.toUpperCase(),
-    verses: data.verses || [],
-    isGujarati: data.isGujarati || false,
-  };
 }
 
 export async function fetchChapter(book, chapter, version = 'KJV') {
   const versionId = VERSION_MAP[version]?.id || 'kjv';
   const url = `${SERVER_URL}/chapter?book=${encodeURIComponent(book)}&chapter=${chapter}&version=${versionId}`;
   
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error('Failed to fetch chapter.');
+  console.log('[DEBUG] Fetching Chapter:', url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error('[DEBUG] Fetch Chapter Failed:', res.status, res.statusText);
+      throw new Error('Failed to fetch chapter.');
+    }
+    
+    const data = await res.json();
+    return {
+      reference: data.reference,
+      translation: versionId.toUpperCase(),
+      verses: data.verses || [],
+      isGujarati: data.isGujarati || false,
+    };
+  } catch (error) {
+    console.error('[DEBUG] Fetch Chapter Error:', error.message);
+    throw error;
   }
-  
-  const data = await res.json();
-  return {
-    reference: data.reference,
-    translation: versionId.toUpperCase(),
-    verses: data.verses || [],
-    isGujarati: data.isGujarati || false,
-  };
 }
 
 export async function searchVerses(query, version = 'KJV') {
   const versionId = VERSION_MAP[version]?.id || 'kjv';
   const url = `${SERVER_URL}/search?q=${encodeURIComponent(query)}&version=${versionId}`;
   
-  const res = await fetch(url);
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Search failed');
+  console.log('[DEBUG] Searching Verses:', url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error('[DEBUG] Search Failed:', res.status, res.statusText);
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.error || 'Search failed');
+    }
+    
+    const data = await res.json();
+    console.log(`[DEBUG] Search returned ${data.length} results.`);
+    return data;
+  } catch (error) {
+    console.error('[DEBUG] Search Error:', error.message);
+    throw error;
   }
-  
-  return await res.json();
 }
 
 

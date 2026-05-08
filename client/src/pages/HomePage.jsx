@@ -46,7 +46,8 @@ export default function HomePage() {
       const v = await fetchVerseOfDay(version);
       setVerse(v);
     } catch (e) {
-      setError('Could not load Verse of the Day.');
+      console.error('Fetch error:', e);
+      setError('Server waking up or unable to fetch verses.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -94,14 +95,16 @@ export default function HomePage() {
               <div className="skeleton h-6 rounded w-4/5" />
             </div>
             <div className="skeleton h-4 w-32 rounded" />
+            <p className="text-xs text-secondary mt-4 animate-pulse">Connecting to server...</p>
           </div>
         )}
 
         {error && !loading && (
           <div className="card p-6 text-center text-secondary">
-            <p>{error}</p>
-            <button onClick={() => load()} className="mt-3 text-sm accent hover:underline">
-              Try again
+            <p className="mb-2 font-medium">{error}</p>
+            <p className="text-xs text-muted-custom mb-4">Render free-tier servers spin down after inactivity and take up to 50 seconds to wake up.</p>
+            <button onClick={() => load(true)} className="px-4 py-2 rounded-lg bg-scripture-100 dark:bg-scripture-900/50 text-scripture-600 hover:bg-scripture-200 transition-colors text-sm font-medium">
+              Retry Connection
             </button>
           </div>
         )}
