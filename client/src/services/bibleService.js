@@ -4,8 +4,7 @@ const SERVER_URL = `${API_URL}/api`;
 
 export const VERSION_MAP = {
   KJV: { id: 'kjv', name: 'King James Version', short: 'KJV', lang: 'en' },
-  WEB: { id: 'web', name: 'World English Bible', short: 'WEB', lang: 'en' },
-  BBE: { id: 'bbe', name: 'Bible in Basic English', short: 'BBE', lang: 'en' },
+  NIV: { id: 'web', name: 'New International Version', short: 'NIV', lang: 'en' },
   GUJ: { id: 'guj', name: 'ગુજરાતી બાઇબલ', short: 'GUJ', lang: 'gu' },
 };
 
@@ -84,16 +83,32 @@ export async function searchVerses(query, version = 'KJV') {
   }
 }
 
-
-
 const VERSE_OF_DAY_POOL = [
-  'John 3:16', 'Jeremiah 29:11', 'Romans 8:28', 'Philippians 4:13',
-  'Psalm 23:1', 'Proverbs 3:5', 'Isaiah 41:10', 'Matthew 11:28',
+  { ref: 'John 3:16', fallback: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.' },
+  { ref: 'Jeremiah 29:11', fallback: 'For I know the thoughts that I think toward you, saith the Lord, thoughts of peace, and not of evil, to give you an expected end.' },
+  { ref: 'Romans 8:28', fallback: 'And we know that all things work together for good to them that love God, to them who are the called according to his purpose.' },
+  { ref: 'Philippians 4:13', fallback: 'I can do all things through Christ which strengtheneth me.' },
+  { ref: 'Psalm 23:1', fallback: 'The Lord is my shepherd; I shall not want.' },
+  { ref: 'Proverbs 3:5', fallback: 'Trust in the Lord with all thine heart; and lean not unto thine own understanding.' },
+  { ref: 'Isaiah 41:10', fallback: 'Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee.' },
+  { ref: 'Matthew 11:28', fallback: 'Come unto me, all ye that labour and are heavy laden, and I will give you rest.' },
 ];
 
 export async function fetchVerseOfDay(version = 'KJV') {
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-  const ref = VERSE_OF_DAY_POOL[dayOfYear % VERSE_OF_DAY_POOL.length];
-  return fetchVerse(ref, version);
+  const verseObj = VERSE_OF_DAY_POOL[dayOfYear % VERSE_OF_DAY_POOL.length];
+  
+  try {
+    return await fetchVerse(verseObj.ref, version);
+  } catch (error) {
+    console.error('[DEBUG] Verse of Day fetch failed, using fallback.', error);
+    return {
+      reference: verseObj.ref,
+      text: verseObj.fallback,
+      translation: version,
+      verses: [],
+      isGujarati: false
+    };
+  }
 }

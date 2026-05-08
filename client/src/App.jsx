@@ -21,8 +21,8 @@ export default function App() {
             </Routes>
           </main>
           <footer className="border-t border-custom mt-16 py-8 text-center text-xs text-muted-custom bg-base">
-            <p>Scripture — Built with care for the Word of God</p>
-            <p className="mt-1">Verses from KJV, WEB, BBE · AI by Claude</p>
+            <p>VerseCanvas — Built with care for the Word of God</p>
+            <p className="mt-1">Verses from KJV, NIV, GUJ · AI Powered</p>
           </footer>
         </div>
       </BrowserRouter>

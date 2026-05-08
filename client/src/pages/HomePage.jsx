@@ -65,7 +65,7 @@ export default function HomePage() {
           Daily Reading
         </div>
         <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary leading-tight mb-4">
-          Scripture
+          VerseCanvas
         </h1>
         <p className="text-secondary text-lg max-w-md mx-auto">
           Read, search, and explore the Bible with AI-powered insights.

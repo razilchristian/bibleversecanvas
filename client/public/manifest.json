@@ -1,0 +1,9 @@
+{
+  "name": "VerseCanvas",
+  "short_name": "VerseCanvas",
+  "description": "Read, search, and explore the Bible with beautiful typographic posters and AI insights.",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}

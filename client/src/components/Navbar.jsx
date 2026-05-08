@@ -26,7 +26,7 @@ export default function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-scripture-900 dark:bg-scripture-500 flex items-center justify-center">
             <span className="text-parchment-200 text-sm font-serif">✦</span>
           </div>
-          <span className="font-display font-semibold text-lg text-primary tracking-tight">Scripture</span>
+          <span className="font-display font-semibold text-lg text-primary tracking-tight">VerseCanvas</span>
         </Link>
 
         {/* Desktop Nav */}
