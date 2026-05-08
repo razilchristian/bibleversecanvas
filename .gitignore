@@ -1,5 +1,11 @@
 node_modules/
 dist/
-.env
 .DS_Store
 *.log
+
+# Environment variables
+.env
+.env.*
+**/.env
+server/.env
+client/.env
