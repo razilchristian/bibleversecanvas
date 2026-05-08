@@ -3,6 +3,7 @@ import { Download, Palette, Type, Sun, Moon, Loader2, Upload, AlignLeft, AlignCe
 import html2canvas from 'html2canvas';
 import { cn } from '../utils/cn';
 import { translateToGujarati } from '../services/aiService';
+import { fetchVerse } from '../services/bibleService';
 
 const POSTER_BACKGROUNDS = [
   { id: 'dawn', cls: 'pg-dawn', name: 'Dawn' },
@@ -42,8 +43,9 @@ export default function PosterGenerator({ verse }) {
   const [orientation, setOrientation] = useState(ORIENTATIONS[0]);
   const [downloading, setDownloading] = useState(false);
   
-  // Gujarati translation state
-  const [gujaratiText, setGujaratiText] = useState('');
+  // Translation states
+  const [englishText, setEnglishText] = useState(verse.isGujarati ? '' : verse.text);
+  const [gujaratiText, setGujaratiText] = useState(verse.isGujarati ? verse.text : '');
   const [translating, setTranslating] = useState(false);
   
   const posterRef = useRef(null);
@@ -52,23 +54,39 @@ export default function PosterGenerator({ verse }) {
   const textCls = textColor === 'light' ? 'text-white' : 'text-slate-900';
 
   useEffect(() => {
-    if (verse && !verse.isGujarati && verse.translation !== 'GUJ') {
-      const getTranslation = async () => {
-        setTranslating(true);
-        try {
-          const translation = await translateToGujarati(verse.text);
-          setGujaratiText(translation);
-        } catch (error) {
-          console.error("Failed to translate verse for poster:", error);
-          setGujaratiText('');
-        } finally {
-          setTranslating(false);
+    if (!verse) return;
+
+    const getTranslations = async () => {
+      setTranslating(true);
+      try {
+        if (verse.isGujarati || verse.translation === 'GUJ') {
+          setGujaratiText(verse.text);
+          // Fetch English fallback
+          try {
+            const enRes = await fetchVerse(verse.reference, 'KJV');
+            setEnglishText(enRes.text);
+          } catch (e) {
+            setEnglishText('English translation unavailable.');
+          }
+        } else {
+          setEnglishText(verse.text);
+          // Fetch real Gujarati Bible verse
+          try {
+            const gujRes = await fetchVerse(verse.reference, 'GUJ');
+            setGujaratiText(gujRes.text);
+          } catch (e) {
+            // Fallback to Gemini
+            console.log('Real Gujarati verse not found, falling back to AI...', e);
+            const translation = await translateToGujarati(verse.text);
+            setGujaratiText(translation);
+          }
         }
-      };
-      getTranslation();
-    } else {
-      setGujaratiText('');
-    }
+      } finally {
+        setTranslating(false);
+      }
+    };
+    
+    getTranslations();
   }, [verse]);
 
   const handleDownload = async () => {
@@ -106,7 +124,7 @@ export default function PosterGenerator({ verse }) {
   const alignCls = textAlign === 'center' ? 'items-center text-center' : textAlign === 'left' ? 'items-start text-left' : 'items-end text-right';
   
   // Smart text scaling based on length
-  const totalLength = verse.text.length + (gujaratiText?.length || 0);
+  const totalLength = (englishText?.length || 0) + (gujaratiText?.length || 0);
   const lengthScaleFactor = totalLength > 250 ? 0.75 : totalLength > 150 ? 0.85 : 1;
   const finalFontSize = Math.floor(fontSize * lengthScaleFactor);
   const finalGujaratiSize = Math.max(Math.floor(finalFontSize * 0.85), 14);
@@ -140,24 +158,26 @@ export default function PosterGenerator({ verse }) {
               alignCls
             )}>
               {/* English Verse Text (Primary) */}
-              <p 
-                className={cn('leading-relaxed drop-shadow-md', font.cls, textCls, verse.isGujarati && 'font-gujarati')}
-                style={{ fontSize: `${finalFontSize}px` }}
-              >
-                "{verse.text}"
-              </p>
+              {englishText && (
+                <p 
+                  className={cn('leading-relaxed drop-shadow-md', font.cls, textCls)}
+                  style={{ fontSize: `${finalFontSize}px` }}
+                >
+                  "{englishText}"
+                </p>
+              )}
 
-              {/* Loading / Gujarati Verse Text (Secondary) */}
-              {translating && !verse.isGujarati && (
+              {/* Loading State */}
+              {translating && (
                 <div className={cn('flex items-center gap-2 text-sm opacity-80', textCls)}>
                   <Loader2 size={14} className="animate-spin" />
-                  Translating to Gujarati...
+                  Loading bilingual text...
                 </div>
               )}
               
               {!translating && gujaratiText && (
                 <div className={cn('flex flex-col', alignCls, textCls)}>
-                  {orientation.id !== 'landscape' && (
+                  {orientation.id !== 'landscape' && englishText && (
                     <div className={cn("h-[1px] bg-current opacity-30 mb-4 sm:mb-6", textAlign === 'center' ? 'w-12' : 'w-12')}></div>
                   )}
                   <p 

@@ -10,7 +10,7 @@ export const VERSION_MAP = {
 
 export async function fetchVerse(reference, version = 'KJV') {
   const versionId = VERSION_MAP[version]?.id || 'kjv';
-  const url = `${BASE_URL}/${encodeURIComponent(reference)}?translation=${versionId}`;
+  const url = `${SERVER_URL}/verse?ref=${encodeURIComponent(reference)}&version=${versionId}`;
   
   const res = await fetch(url);
   if (!res.ok) {
@@ -21,15 +21,16 @@ export async function fetchVerse(reference, version = 'KJV') {
   const data = await res.json();
   return {
     reference: data.reference,
-    text: data.text.trim().replace(/\n/g, ' '),
+    text: data.text?.trim().replace(/\n/g, ' ') || '',
     translation: versionId.toUpperCase(),
     verses: data.verses || [],
+    isGujarati: data.isGujarati || false,
   };
 }
 
 export async function fetchChapter(book, chapter, version = 'KJV') {
   const versionId = VERSION_MAP[version]?.id || 'kjv';
-  const url = `${BASE_URL}/${encodeURIComponent(book)}+${chapter}?translation=${versionId}`;
+  const url = `${SERVER_URL}/chapter?book=${encodeURIComponent(book)}&chapter=${chapter}&version=${versionId}`;
   
   const res = await fetch(url);
   if (!res.ok) {
@@ -41,6 +42,7 @@ export async function fetchChapter(book, chapter, version = 'KJV') {
     reference: data.reference,
     translation: versionId.toUpperCase(),
     verses: data.verses || [],
+    isGujarati: data.isGujarati || false,
   };
 }
 
