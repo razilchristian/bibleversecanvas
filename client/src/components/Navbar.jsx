@@ -5,7 +5,6 @@ import { useApp } from '../context/AppContext';
 import { VERSION_MAP } from '../services/bibleService';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
-import LogoIcon from './LogoIcon';
 
 export default function Navbar() {
   const { darkMode, setDarkMode, version, setVersion } = useApp();
@@ -23,13 +22,10 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-custom bg-base/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-10">
-          <div className="flex items-center justify-center text-[#002147] dark:text-white transition-transform group-hover:scale-105">
-            <LogoIcon size={36} strokeWidth={1.5} />
+        <Link to="/" className="flex items-center group shrink-0 relative z-10">
+          <div className="h-10 md:h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,33,71,0.08)] border border-[#002147]/10 p-2 transition-transform group-hover:scale-105 group-hover:shadow-[0_4px_14px_rgba(0,33,71,0.12)] flex items-center justify-center">
+            <img src="/logo.png" alt="Verse Canva" className="h-full w-auto object-contain max-w-full" />
           </div>
-          <span className="font-display font-semibold text-2xl tracking-tight text-[#002147] dark:text-white hidden sm:block mt-1">
-            Verse Canva
-          </span>
         </Link>
 
         {/* Desktop Nav */}

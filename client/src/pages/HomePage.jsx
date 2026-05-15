@@ -5,7 +5,6 @@ import { fetchVerseOfDay } from '../services/bibleService';
 import { useApp } from '../context/AppContext';
 import VerseCard from '../components/VerseCard';
 import ExplainModal from '../components/ExplainModal';
-import LogoIcon from '../components/LogoIcon';
 import { cn } from '../utils/cn';
 
 const FEATURES = [
@@ -67,8 +66,8 @@ export default function HomePage() {
           Daily Reading
         </div>
         
-        <div className="w-24 h-24 sm:w-32 sm:h-32 mb-8 relative z-10 flex items-center justify-center text-[#002147] dark:text-white transition-transform hover:scale-105 opacity-90 drop-shadow-md">
-          <LogoIcon size={120} strokeWidth={1} className="w-full h-full" />
+        <div className="w-32 md:w-48 bg-white shadow-xl border border-[#002147]/10 p-3 sm:p-4 rounded-3xl mb-8 relative z-10 flex items-center justify-center transition-transform hover:scale-105">
+          <img src="/logo.png" alt="Verse Canva Logo" className="w-full h-auto object-contain" />
         </div>
 
         <h1 className="text-5xl sm:text-7xl font-display font-bold text-[#002147] dark:text-white leading-tight mb-4 tracking-tight drop-shadow-sm relative z-10">

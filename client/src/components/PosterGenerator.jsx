@@ -4,7 +4,6 @@ import html2canvas from 'html2canvas';
 import { cn } from '../utils/cn';
 import { translateToGujarati } from '../services/aiService';
 import { fetchVerse } from '../services/bibleService';
-import LogoIcon from './LogoIcon';
 
 const POSTER_BACKGROUNDS = [
   { id: 'dawn', cls: 'pg-dawn', name: 'Dawn' },
@@ -206,9 +205,8 @@ export default function PosterGenerator({ verse }) {
               </div>
 
               {/* Watermark */}
-              <div className={cn('mt-8 flex flex-col items-center gap-1.5 opacity-50', textCls)}>
-                <LogoIcon size={24} strokeWidth={1.5} />
-                <span className="text-[10px] uppercase tracking-[0.2em] font-sans font-medium">Verse Canva</span>
+              <div className={cn('mt-8 flex justify-center opacity-60', textCls)}>
+                <img src="/logo.png" alt="Verse Canva" className={cn('h-8 w-auto object-contain', textColor === 'light' ? 'brightness-0 invert' : 'brightness-0')} />
               </div>
             </div>
           </div>

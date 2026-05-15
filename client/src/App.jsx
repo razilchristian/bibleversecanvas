@@ -5,7 +5,6 @@ import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import ReadPage from './pages/ReadPage';
 import PosterPage from './pages/PosterPage';
-import LogoIcon from './components/LogoIcon';
 
 export default function App() {
   return (
@@ -23,9 +22,8 @@ export default function App() {
           </main>
           <footer className="mt-16 py-12 text-center bg-[#002147] text-white">
             <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-              <div className="flex items-center gap-3 justify-center mb-6 text-white opacity-90">
-                <LogoIcon size={32} strokeWidth={1.5} />
-                <span className="font-display font-semibold text-xl tracking-wide">Verse Canva</span>
+              <div className="flex justify-center mb-6">
+                <img src="/logo.png" alt="Verse Canva" className="h-14 md:h-16 w-auto object-contain brightness-0 invert opacity-90" />
               </div>
               <p className="text-white/80 font-light mb-6">Read, Search & Share God's Word Beautifully</p>
               <div className="w-16 h-px bg-white/20 mb-6"></div>
