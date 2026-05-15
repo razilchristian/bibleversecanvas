@@ -59,16 +59,17 @@ export default function HomePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
       {/* Hero */}
-      <div className="text-center mb-12 animate-fade-in">
-        <div className="inline-flex items-center gap-2 text-xs font-medium accent px-3 py-1.5 rounded-full accent-light-bg mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-scripture-500 animate-pulse"></span>
+      <div className="text-center mb-16 animate-fade-in flex flex-col items-center">
+        <div className="inline-flex items-center gap-2 text-xs font-medium text-brand-600 dark:text-brand-300 bg-brand-50 dark:bg-brand-900/30 px-3 py-1.5 rounded-full mb-6 border border-brand-200 dark:border-brand-800/50">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
           Daily Reading
         </div>
-        <h1 className="text-4xl sm:text-5xl font-display font-bold text-primary leading-tight mb-4">
-          VerseCanvas
+        <img src="/logo.png" alt="Verse Canva Logo" className="w-16 h-16 object-contain mb-4 drop-shadow-md" />
+        <h1 className="text-4xl sm:text-6xl font-display font-bold text-primary leading-tight mb-4 tracking-tight">
+          Verse Canva
         </h1>
-        <p className="text-secondary text-lg max-w-md mx-auto">
-          Read, search, and explore the Bible with AI-powered insights.
+        <p className="text-secondary text-lg sm:text-xl max-w-md mx-auto font-sans font-light">
+          Read, Search & Share God's Word Beautifully
         </p>
       </div>
 
@@ -103,7 +104,7 @@ export default function HomePage() {
           <div className="card p-6 text-center text-secondary">
             <p className="mb-2 font-medium">{error}</p>
             <p className="text-xs text-muted-custom mb-4">Render free-tier servers spin down after inactivity and take up to 50 seconds to wake up.</p>
-            <button onClick={() => load(true)} className="px-4 py-2 rounded-lg bg-scripture-100 dark:bg-scripture-900/50 text-scripture-600 hover:bg-scripture-200 transition-colors text-sm font-medium">
+            <button onClick={() => load(true)} className="px-4 py-2 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-600 hover:bg-brand-200 transition-colors text-sm font-medium">
               Retry Connection
             </button>
           </div>
@@ -128,7 +129,7 @@ export default function HomePage() {
               to={link}
               className={cn(
                 'card p-5 hover:shadow-md transition-all duration-200 group',
-                'hover:border-scripture-200 dark:hover:border-scripture-800/50'
+                'hover:border-brand-200 dark:hover:border-brand-800/50'
               )}
             >
               <div className={cn('mb-3', color)}>

@@ -43,7 +43,7 @@ export default function PosterPage() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="mb-8 animate-fade-in">
         <div className="flex items-center gap-2 mb-2">
-          <Image size={20} className="text-scripture-500" />
+          <Image size={20} className="text-brand-500" />
           <h1 className="text-3xl font-display font-bold text-primary">Verse Poster</h1>
         </div>
         <p className="text-secondary">

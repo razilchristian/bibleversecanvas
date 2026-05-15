@@ -71,16 +71,16 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
   return (
     <div className={cn(
       'card p-6 sm:p-8 group relative overflow-hidden transition-all duration-300',
-      isPlaying && 'ring-2 ring-scripture-500/30'
+      isPlaying && 'ring-2 ring-brand-500/30'
     )}>
       {/* Playing indicator */}
       {isPlaying && (
-        <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs font-medium text-scripture-600 dark:text-scripture-400">
+        <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs font-medium text-brand-600 dark:text-brand-400">
           <span className="flex gap-0.5">
             {[...Array(3)].map((_, i) => (
               <span
                 key={i}
-                className="w-0.5 bg-scripture-500 rounded-full animate-pulse-soft"
+                className="w-0.5 bg-brand-500 rounded-full animate-pulse-soft"
                 style={{
                   height: `${8 + i * 3}px`,
                   animationDelay: `${i * 0.15}s`,
@@ -94,8 +94,8 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
 
       {/* Badge */}
       {showBadge && (
-        <div className="inline-flex items-center gap-1.5 text-xs font-medium text-scripture-600 dark:text-scripture-400 accent-light-bg px-2.5 py-1 rounded-full mb-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-scripture-500"></span>
+        <div className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-600 dark:text-brand-400 accent-light-bg px-2.5 py-1 rounded-full mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
           Verse of the Day
         </div>
       )}
@@ -125,8 +125,8 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
 
       {/* Gujarati Translation (Dynamic) */}
       {gujaratiText && (
-        <div className="mb-6 p-4 rounded-xl bg-scripture-50/50 dark:bg-scripture-900/20 border border-scripture-100 dark:border-scripture-800/50 animate-fade-in">
-          <div className="flex items-center gap-2 mb-2 text-scripture-600 dark:text-scripture-400">
+        <div className="mb-6 p-4 rounded-xl bg-brand-50/50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-800/50 animate-fade-in">
+          <div className="flex items-center gap-2 mb-2 text-brand-600 dark:text-brand-400">
             <Languages size={14} />
             <span className="text-xs font-bold uppercase tracking-wider">Gujarati Translation</span>
           </div>
@@ -148,8 +148,8 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
           className={cn(
             'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all border',
             isPlaying
-              ? 'border-scripture-400 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
-              : 'border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300'
+              ? 'border-brand-400 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
+              : 'border-custom bg-card text-secondary hover:text-primary hover:border-brand-300'
           )}
         >
           {isPlaying ? <Pause size={14} /> : <Play size={14} />}
@@ -163,8 +163,8 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
             className={cn(
               'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border transition-all',
               gujaratiText 
-                ? 'border-scripture-300 bg-scripture-50 text-scripture-700'
-                : 'border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300'
+                ? 'border-brand-300 bg-brand-50 text-brand-700'
+                : 'border-custom bg-card text-secondary hover:text-primary hover:border-brand-300'
             )}
           >
             {translating ? <Loader2 size={14} className="animate-spin" /> : <Languages size={14} />}
@@ -175,7 +175,7 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
         {onExplain && (
           <button
             onClick={onExplain}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
           >
             <Sparkles size={14} />
             Explain
@@ -184,7 +184,7 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
 
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
         >
           {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
           {copied ? 'Copied!' : 'Copy'}
@@ -192,7 +192,7 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
 
         <button
           onClick={handleShare}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
         >
           <Share2 size={14} />
           Share

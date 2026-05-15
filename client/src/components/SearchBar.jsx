@@ -38,7 +38,7 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
       <form onSubmit={handleSubmit} className="relative">
         <div className={cn(
           'relative flex items-center card transition-all duration-200',
-          focused && 'ring-2 ring-scripture-500/30'
+          focused && 'ring-2 ring-brand-500/30'
         )}>
           <Search
             size={18}
@@ -67,7 +67,7 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
             <button
               type="submit"
               disabled={loading || !query.trim()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-scripture-700 hover:bg-scripture-900 dark:bg-scripture-500 dark:hover:bg-scripture-600 text-white text-xs font-medium transition-all disabled:opacity-50 shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-700 hover:bg-brand-900 dark:bg-brand-500 dark:hover:bg-brand-600 text-white text-xs font-medium transition-all disabled:opacity-50 shrink-0"
             >
               {loading ? <Loader2 size={13} className="animate-spin" /> : <Search size={13} />}
               {loading ? 'Searching' : 'Search'}
@@ -82,7 +82,7 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
           <button
             key={topic}
             onClick={() => handleTopic(topic)}
-            className="text-xs px-3 py-1 rounded-full border border-custom bg-card text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+            className="text-xs px-3 py-1 rounded-full border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
           >
             {topic}
           </button>

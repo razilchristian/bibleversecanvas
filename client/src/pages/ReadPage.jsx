@@ -83,9 +83,9 @@ export default function ReadPage() {
       <div className="mb-6 animate-fade-in">
         <button
           onClick={() => setShowBookSelector(!showBookSelector)}
-          className="flex items-center gap-2 px-4 py-2 bg-card border border-custom rounded-xl shadow-sm text-primary hover:border-scripture-400 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-card border border-custom rounded-xl shadow-sm text-primary hover:border-brand-400 transition-colors"
         >
-          <LayoutGrid size={18} className="text-scripture-500" />
+          <LayoutGrid size={18} className="text-brand-500" />
           <span className="font-medium">Browse All 66 Books</span>
         </button>
       </div>
@@ -108,9 +108,9 @@ export default function ReadPage() {
                         key={book.name}
                         onClick={() => { setSelectedBook(book); setChapter(1); setShowBookSelector(false); }}
                         className={cn(
-                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-scripture-300',
+                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-brand-300',
                           selectedBook.name === book.name
-                            ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                            ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
                             : 'border-transparent text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
                         )}
                       >
@@ -127,9 +127,9 @@ export default function ReadPage() {
                         key={book.name}
                         onClick={() => { setSelectedBook(book); setChapter(1); setShowBookSelector(false); }}
                         className={cn(
-                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-scripture-300',
+                          'text-xs px-2 py-1.5 rounded-md border text-left font-medium transition-all hover:border-brand-300',
                           selectedBook.name === book.name
-                            ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+                            ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
                             : 'border-transparent text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
                         )}
                       >
@@ -183,7 +183,7 @@ export default function ReadPage() {
             const v = parseInt(e.target.value);
             if (!isNaN(v) && v >= 1 && v <= selectedBook.maxChapter) setChapter(v);
           }}
-          className="w-16 text-sm text-center px-2 py-1.5 border border-custom rounded-lg bg-card text-primary focus:outline-none focus:ring-2 focus:ring-scripture-500/30"
+          className="w-16 text-sm text-center px-2 py-1.5 border border-custom rounded-lg bg-card text-primary focus:outline-none focus:ring-2 focus:ring-brand-500/30"
         />
 
         <button
@@ -192,7 +192,7 @@ export default function ReadPage() {
           className={cn(
             'ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all',
             isChapterPlaying
-              ? 'border-scripture-400 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400'
+              ? 'border-brand-400 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
               : 'border-custom bg-card text-secondary hover:text-primary'
           )}
         >
@@ -259,7 +259,7 @@ export default function ReadPage() {
                         className={cn(
                           'p-1.5 rounded-md transition-colors',
                           isPlayingVerse
-                            ? 'text-scripture-500'
+                            ? 'text-brand-500'
                             : 'text-muted-custom hover:text-primary'
                         )}
                         title="Listen to verse"

@@ -21,7 +21,7 @@ export default function App() {
             </Routes>
           </main>
           <footer className="border-t border-custom mt-16 py-8 text-center text-xs text-muted-custom bg-base">
-            <p>VerseCanvas — Built with care for the Word of God</p>
+            <p>Verse Canva — Built for sharing God's Word beautifully.</p>
             <p className="mt-1">Verses from KJV, NIV, GUJ · AI Powered</p>
           </footer>
         </div>

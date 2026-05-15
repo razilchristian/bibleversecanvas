@@ -155,7 +155,7 @@ export default function SearchPage() {
                   <button
                     key={term}
                     onClick={() => { setQuery(term); performSearch(term); }}
-                    className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-custom bg-card text-sm text-secondary hover:text-primary hover:border-scripture-300 transition-all"
+                    className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-custom bg-card text-sm text-secondary hover:text-primary hover:border-brand-300 transition-all"
                   >
                     {term}
                     <span 

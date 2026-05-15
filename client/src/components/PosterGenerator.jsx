@@ -102,7 +102,7 @@ export default function PosterGenerator({ verse }) {
         logging: false,
       });
       const link = document.createElement('a');
-      link.download = `scripture-${verse.reference.replace(/[\s:]/g, '-')}.png`;
+      link.download = `brand-${verse.reference.replace(/[\s:]/g, '-')}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (e) {
@@ -203,6 +203,12 @@ export default function PosterGenerator({ verse }) {
               )}>
                 {verse.translation}
               </div>
+
+              {/* Watermark */}
+              <div className={cn('mt-8 flex flex-col items-center gap-1.5 opacity-50', textCls)}>
+                <img src="/logo.png" alt="Verse Canva" className={cn('w-6 h-6 object-contain', textColor === 'light' ? 'brightness-0 invert' : 'brightness-0')} />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-sans font-medium">Verse Canva</span>
+              </div>
             </div>
           </div>
         </div>
@@ -214,7 +220,7 @@ export default function PosterGenerator({ verse }) {
         {/* Background Section */}
         <div>
           <h3 className="text-sm font-semibold text-secondary mb-4 flex items-center gap-2 uppercase tracking-wider">
-            <Palette size={16} className="text-scripture-500" />
+            <Palette size={16} className="text-brand-500" />
             Background
           </h3>
           <div className="grid grid-cols-5 gap-2 mb-4">
@@ -226,21 +232,24 @@ export default function PosterGenerator({ verse }) {
                 className={cn(
                   'aspect-square rounded-xl overflow-hidden border-2 transition-all hover:scale-105',
                   b.cls,
-                  bg.id === b.id ? 'border-scripture-500 scale-105 shadow-md' : 'border-transparent'
+                  bg.id === b.id ? 'border-brand-500 scale-105 shadow-md' : 'border-transparent'
                 )}
                 style={b.style ? { backgroundImage: `url(${b.style})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
               />
             ))}
           </div>
           
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col gap-2 mt-4">
             <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-custom bg-base hover:bg-parchment-50 dark:hover:bg-ink-800 transition-colors text-sm font-medium text-primary"
+              className="w-full flex flex-col items-center justify-center gap-2 px-4 py-6 rounded-2xl border-2 border-dashed border-brand-200 dark:border-brand-800/50 bg-brand-50/50 dark:bg-brand-900/10 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:border-brand-400 transition-all text-sm font-medium text-brand-700 dark:text-brand-400"
             >
-              <Upload size={16} />
+              <div className="p-3 rounded-full bg-white dark:bg-black shadow-sm mb-1">
+                <Upload size={18} className="text-brand-500" />
+              </div>
               Upload Custom Image
+              <span className="text-xs font-normal text-secondary">JPG, PNG up to 10MB</span>
             </button>
           </div>
           
@@ -252,7 +261,7 @@ export default function PosterGenerator({ verse }) {
               </label>
               <input 
                 type="range" min="0" max="90" value={blurOverlay} onChange={(e) => setBlurOverlay(e.target.value)}
-                className="w-full accent-scripture-500"
+                className="w-full accent-brand-500"
               />
             </div>
           )}
@@ -261,7 +270,7 @@ export default function PosterGenerator({ verse }) {
         {/* Layout & Typography Section */}
         <div className="pt-6 border-t border-custom">
           <h3 className="text-sm font-semibold text-secondary mb-4 flex items-center gap-2 uppercase tracking-wider">
-            <Layout size={16} className="text-scripture-500" />
+            <Layout size={16} className="text-brand-500" />
             Layout & Font
           </h3>
 
@@ -275,8 +284,8 @@ export default function PosterGenerator({ verse }) {
                   className={cn(
                     'flex-1 flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl border transition-all text-xs font-medium',
                     orientation.id === o.id
-                      ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400 shadow-sm'
-                      : 'border-custom bg-base text-secondary hover:text-primary hover:border-scripture-300'
+                      ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 shadow-sm'
+                      : 'border-custom bg-base text-secondary hover:text-primary hover:border-brand-300'
                   )}
                 >
                   <Icon size={18} />
@@ -296,7 +305,7 @@ export default function PosterGenerator({ verse }) {
                     'flex-1 px-4 py-2.5 rounded-xl text-sm border transition-all',
                     f.cls,
                     font.id === f.id
-                      ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400 shadow-sm'
+                      ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 shadow-sm'
                       : 'border-custom bg-base text-secondary hover:text-primary'
                   )}
                 >
@@ -313,14 +322,14 @@ export default function PosterGenerator({ verse }) {
                 </label>
                 <input 
                   type="range" min="16" max="44" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))}
-                  className="w-full accent-scripture-500"
+                  className="w-full accent-brand-500"
                 />
               </div>
               
               <div className="flex bg-base rounded-lg border border-custom p-1 shadow-sm">
-                <button onClick={() => setTextAlign('left')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'left' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-700' : 'text-secondary')}><AlignLeft size={16}/></button>
-                <button onClick={() => setTextAlign('center')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'center' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-700' : 'text-secondary')}><AlignCenter size={16}/></button>
-                <button onClick={() => setTextAlign('right')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'right' ? 'bg-scripture-100 dark:bg-scripture-900/50 text-scripture-700' : 'text-secondary')}><AlignRight size={16}/></button>
+                <button onClick={() => setTextAlign('left')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'left' ? 'bg-brand-100 dark:bg-brand-900/50 text-brand-700' : 'text-secondary')}><AlignLeft size={16}/></button>
+                <button onClick={() => setTextAlign('center')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'center' ? 'bg-brand-100 dark:bg-brand-900/50 text-brand-700' : 'text-secondary')}><AlignCenter size={16}/></button>
+                <button onClick={() => setTextAlign('right')} className={cn("p-1.5 rounded-md transition-colors", textAlign === 'right' ? 'bg-brand-100 dark:bg-brand-900/50 text-brand-700' : 'text-secondary')}><AlignRight size={16}/></button>
               </div>
             </div>
 
@@ -332,7 +341,7 @@ export default function PosterGenerator({ verse }) {
                   className={cn(
                     'flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm border transition-all font-medium',
                     textColor === c
-                      ? 'border-scripture-500 bg-scripture-50 dark:bg-scripture-900/30 text-scripture-700 dark:text-scripture-400 shadow-sm'
+                      ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 shadow-sm'
                       : 'border-custom bg-base text-secondary hover:text-primary'
                   )}
                 >
@@ -349,7 +358,7 @@ export default function PosterGenerator({ verse }) {
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-semibold text-base bg-scripture-600 hover:bg-scripture-700 dark:bg-scripture-500 dark:hover:bg-scripture-600 text-white transition-all shadow-md hover:shadow-lg disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-semibold text-base bg-brand-600 hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-600 text-white transition-all shadow-md hover:shadow-lg disabled:opacity-60"
           >
             <Download size={18} />
             {downloading ? 'Generating High-Res Image…' : 'Download Poster (PNG)'}

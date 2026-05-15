@@ -45,7 +45,7 @@ export default function ExplainModal({ verse, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-custom shrink-0">
           <div className="flex items-center gap-2">
-            <Sparkles size={18} className="text-scripture-500" />
+            <Sparkles size={18} className="text-brand-500" />
             <h2 className="font-semibold text-primary">AI Explanation</h2>
           </div>
           <button
@@ -58,7 +58,7 @@ export default function ExplainModal({ verse, onClose }) {
 
         {/* Verse Reference */}
         <div className="px-6 py-3 border-b border-custom bg-parchment-50 dark:bg-ink-800/40 shrink-0">
-          <p className="text-sm font-medium text-scripture-600 dark:text-scripture-400">{verse?.reference}</p>
+          <p className="text-sm font-medium text-brand-600 dark:text-brand-400">{verse?.reference}</p>
           <p className={cn(
             'text-sm text-secondary mt-0.5 line-clamp-2 font-serif italic',
             isGujarati && 'font-gujarati not-italic text-xs'
@@ -72,7 +72,7 @@ export default function ExplainModal({ verse, onClose }) {
           {loading && (
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-custom">
-                <Sparkles size={14} className="animate-pulse text-scripture-500" />
+                <Sparkles size={14} className="animate-pulse text-brand-500" />
                 <span>Generating explanation…</span>
               </div>
               {[...Array(4)].map((_, i) => (

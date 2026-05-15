@@ -4,12 +4,12 @@ const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('scripture-dark');
+    const saved = localStorage.getItem('brand-dark');
     return saved ? JSON.parse(saved) : window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   const [version, setVersion] = useState(() =>
-    localStorage.getItem('scripture-version') || 'KJV'
+    localStorage.getItem('brand-version') || 'KJV'
   );
 
   const [audioState, setAudioState] = useState({
@@ -20,11 +20,11 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
-    localStorage.setItem('scripture-dark', JSON.stringify(darkMode));
+    localStorage.setItem('brand-dark', JSON.stringify(darkMode));
   }, [darkMode]);
 
   useEffect(() => {
-    localStorage.setItem('scripture-version', version);
+    localStorage.setItem('brand-version', version);
   }, [version]);
 
   const stopAudio = () => {
