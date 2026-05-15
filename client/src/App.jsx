@@ -20,9 +20,16 @@ export default function App() {
               <Route path="/poster" element={<PosterPage />} />
             </Routes>
           </main>
-          <footer className="border-t border-custom mt-16 py-8 text-center text-xs text-muted-custom bg-base">
-            <p>Verse Canva — Built for sharing God's Word beautifully.</p>
-            <p className="mt-1">Verses from KJV, NIV, GUJ · AI Powered</p>
+          <footer className="mt-16 py-12 text-center bg-[#002147] text-white">
+            <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
+              <div className="flex items-center gap-3 mb-4">
+                <img src="/logo.png" alt="Verse Canva" className="w-8 h-8 object-contain brightness-0 invert" />
+                <span className="font-display font-semibold text-xl tracking-wide">Verse Canva</span>
+              </div>
+              <p className="text-white/80 font-light mb-6">Read, Search & Share God's Word Beautifully</p>
+              <div className="w-16 h-px bg-white/20 mb-6"></div>
+              <p className="text-xs text-white/50">Verses from KJV, NIV, GUJ · AI Powered</p>
+            </div>
           </footer>
         </div>
       </BrowserRouter>

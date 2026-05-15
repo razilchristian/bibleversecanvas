@@ -37,13 +37,12 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
     <div className="w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="relative">
         <div className={cn(
-          'relative flex items-center card transition-all duration-200',
-          focused && 'ring-2 ring-brand-500/30'
+          'relative flex items-center bg-white dark:bg-black/40 border transition-all duration-300 rounded-2xl p-1.5 shadow-[0_2px_15px_rgb(0,0,0,0.03)]',
+          focused ? 'border-[#002147]/30 ring-4 ring-[#002147]/10' : 'border-[#002147]/10 hover:border-[#002147]/20'
         )}>
-          <Search
-            size={18}
-            className="absolute left-4 text-muted-custom shrink-0"
-          />
+          <div className="pl-4 pr-2 text-[#002147]/40 dark:text-white/40">
+            <Search size={18} />
+          </div>
           <input
             type="text"
             value={query}
@@ -51,7 +50,7 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={placeholder}
-            className="w-full pl-11 pr-20 py-3.5 bg-transparent text-primary placeholder:text-muted-custom rounded-2xl focus:outline-none text-sm"
+            className="w-full pl-1 pr-20 py-3.5 bg-transparent text-primary placeholder:text-muted-custom rounded-2xl focus:outline-none text-sm font-medium"
             aria-label="Search Bible"
           />
           <div className="absolute right-2 flex items-center gap-1">
@@ -67,9 +66,9 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
             <button
               type="submit"
               disabled={loading || !query.trim()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-700 hover:bg-brand-900 dark:bg-brand-500 dark:hover:bg-brand-600 text-white text-xs font-medium transition-all disabled:opacity-50 shrink-0"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#002147] text-white text-sm font-semibold transition-all duration-300 disabled:opacity-50 shrink-0 shadow-sm hover:shadow-md hover:-translate-y-0.5"
             >
-              {loading ? <Loader2 size={13} className="animate-spin" /> : <Search size={13} />}
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
               {loading ? 'Searching' : 'Search'}
             </button>
           </div>
@@ -82,7 +81,7 @@ export default function SearchBar({ onSearch, onChange, loading, placeholder = '
           <button
             key={topic}
             onClick={() => handleTopic(topic)}
-            className="text-xs px-3 py-1 rounded-full border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
+            className="text-xs font-medium px-4 py-1.5 rounded-full border border-[#002147]/10 bg-white dark:bg-black/20 text-[#002147]/70 dark:text-white/70 hover:text-[#002147] dark:hover:text-white hover:border-[#002147]/30 transition-all shadow-sm hover:shadow"
           >
             {topic}
           </button>

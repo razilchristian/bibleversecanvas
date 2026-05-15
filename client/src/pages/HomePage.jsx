@@ -59,16 +59,21 @@ export default function HomePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 sm:py-16">
       {/* Hero */}
-      <div className="text-center mb-16 animate-fade-in flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 text-xs font-medium text-brand-600 dark:text-brand-300 bg-brand-50 dark:bg-brand-900/30 px-3 py-1.5 rounded-full mb-6 border border-brand-200 dark:border-brand-800/50">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+      <div className="relative text-center mb-16 animate-fade-in flex flex-col items-center py-12 px-4 rounded-3xl overflow-hidden bg-gradient-to-b from-[#002147]/5 to-transparent border border-[#002147]/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[#002147]/10 blur-[80px] rounded-full pointer-events-none"></div>
+        <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-[#002147] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full mb-8 shadow-sm border border-[#002147]/10 relative z-10">
+          <span className="w-2 h-2 rounded-full bg-[#002147] animate-pulse"></span>
           Daily Reading
         </div>
-        <img src="/logo.png" alt="Verse Canva Logo" className="w-16 h-16 object-contain mb-4 drop-shadow-md" />
-        <h1 className="text-4xl sm:text-6xl font-display font-bold text-primary leading-tight mb-4 tracking-tight">
+        
+        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-lg border border-[#002147]/10 mb-6 relative z-10">
+          <img src="/logo.png" alt="Verse Canva Logo" className="w-[180%] h-[180%] object-cover object-top -translate-y-1" />
+        </div>
+
+        <h1 className="text-5xl sm:text-7xl font-display font-bold text-[#002147] dark:text-white leading-tight mb-4 tracking-tight drop-shadow-sm relative z-10">
           Verse Canva
         </h1>
-        <p className="text-secondary text-lg sm:text-xl max-w-md mx-auto font-sans font-light">
+        <p className="text-[#002147]/70 dark:text-white/70 text-lg sm:text-xl max-w-lg mx-auto font-sans font-light relative z-10">
           Read, Search & Share God's Word Beautifully
         </p>
       </div>

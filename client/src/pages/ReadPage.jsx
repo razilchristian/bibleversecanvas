@@ -190,13 +190,13 @@ export default function ReadPage() {
           onClick={playChapter}
           disabled={!passage}
           className={cn(
-            'ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all',
+            'ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5',
             isChapterPlaying
-              ? 'border-brand-400 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
-              : 'border-custom bg-card text-secondary hover:text-primary'
+              ? 'bg-[#002147] text-white shadow-[0_4px_14px_rgba(0,33,71,0.25)]'
+              : 'bg-white dark:bg-black/20 text-[#002147] dark:text-white border border-[#002147]/20 hover:border-[#002147]/40'
           )}
         >
-          {isChapterPlaying ? <Pause size={13} /> : <Play size={13} />}
+          {isChapterPlaying ? <Pause size={14} /> : <Play size={14} />}
           {isChapterPlaying ? 'Pause' : 'Listen to chapter'}
         </button>
       </div>

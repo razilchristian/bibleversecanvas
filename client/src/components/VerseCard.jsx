@@ -70,8 +70,8 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
 
   return (
     <div className={cn(
-      'card p-6 sm:p-8 group relative overflow-hidden transition-all duration-300',
-      isPlaying && 'ring-2 ring-brand-500/30'
+      'bg-white dark:bg-[#002147]/5 p-6 sm:p-10 group relative overflow-hidden transition-all duration-300 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#002147]/10 hover:shadow-[0_15px_40px_rgb(0,33,71,0.08)] hover:border-[#002147]/20',
+      isPlaying && 'ring-2 ring-[#002147]/30'
     )}>
       {/* Playing indicator */}
       {isPlaying && (
@@ -101,23 +101,23 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
       )}
 
       {/* Translation Badge */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-medium text-muted-custom border border-custom px-2 py-0.5 rounded">
+      <div className="flex items-center justify-between mb-8">
+        <span className="text-xs font-bold tracking-widest text-[#002147] dark:text-white/70 border border-[#002147]/20 dark:border-white/20 px-3 py-1 rounded-full uppercase shadow-sm bg-[#002147]/5 dark:bg-white/5">
           {verse.translation}
         </span>
       </div>
 
       {/* Verse Text */}
       <blockquote className={cn(
-        'relative mb-6',
+        'relative mb-8 mt-2',
         isPlaying && 'verse-playing'
       )}>
-        <span className="absolute -top-2 -left-1 text-5xl text-parchment-300 dark:text-ink-800 font-serif leading-none select-none" aria-hidden>
+        <span className="absolute -top-6 -left-3 text-7xl text-[#002147]/10 dark:text-white/10 font-display leading-none select-none" aria-hidden>
           &ldquo;
         </span>
         <p className={cn(
-          'text-xl sm:text-2xl font-serif leading-relaxed text-primary pl-4',
-          isGujarati && 'font-gujarati text-lg sm:text-xl'
+          'text-2xl sm:text-3xl font-display leading-relaxed text-[#002147] dark:text-white relative z-10',
+          isGujarati && 'font-gujarati text-xl sm:text-2xl'
         )}>
           {renderText(verse.text)}
         </p>
@@ -137,22 +137,22 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
       )}
 
       {/* Reference */}
-      <p className="font-medium text-secondary text-base mb-6">
-        — {verse.reference}
+      <p className="font-sans font-medium text-[#002147]/70 dark:text-white/70 text-lg mb-8 flex items-center gap-2">
+        <span className="w-6 h-px bg-[#002147]/30 dark:bg-white/30"></span> {verse.reference}
       </p>
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={handleAudio}
           className={cn(
-            'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all border',
+            'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5',
             isPlaying
-              ? 'border-brand-400 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400'
-              : 'border-custom bg-card text-secondary hover:text-primary hover:border-brand-300'
+              ? 'bg-[#002147] text-white shadow-[0_4px_14px_rgba(0,33,71,0.25)]'
+              : 'bg-white dark:bg-black/20 text-[#002147] dark:text-white border border-[#002147]/20 hover:border-[#002147]/40'
           )}
         >
-          {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
           {isPlaying ? 'Pause' : 'Listen'}
         </button>
 
@@ -161,13 +161,13 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
             onClick={handleTranslate}
             disabled={translating}
             className={cn(
-              'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border transition-all',
+              'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5',
               gujaratiText 
-                ? 'border-brand-300 bg-brand-50 text-brand-700'
-                : 'border-custom bg-card text-secondary hover:text-primary hover:border-brand-300'
+                ? 'bg-[#002147] text-white shadow-[0_4px_14px_rgba(0,33,71,0.25)]'
+                : 'bg-white dark:bg-black/20 text-[#002147] dark:text-white border border-[#002147]/20 hover:border-[#002147]/40'
             )}
           >
-            {translating ? <Loader2 size={14} className="animate-spin" /> : <Languages size={14} />}
+            {translating ? <Loader2 size={16} className="animate-spin" /> : <Languages size={16} />}
             {gujaratiText ? 'Hide Gujarati' : 'Translate to Gujarati'}
           </button>
         )}
@@ -175,26 +175,26 @@ export default function VerseCard({ verse, onExplain, showBadge = false, keyword
         {onExplain && (
           <button
             onClick={onExplain}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border border-[#002147]/20 bg-white dark:bg-black/20 text-[#002147] dark:text-white hover:border-[#002147]/40 shadow-sm hover:shadow-md hover:-translate-y-0.5"
           >
-            <Sparkles size={14} />
+            <Sparkles size={16} />
             Explain
           </button>
         )}
 
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border border-[#002147]/20 bg-white dark:bg-black/20 text-[#002147] dark:text-white hover:border-[#002147]/40 shadow-sm hover:shadow-md hover:-translate-y-0.5"
         >
-          {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+          {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
           {copied ? 'Copied!' : 'Copy'}
         </button>
 
         <button
           onClick={handleShare}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium border border-custom bg-card text-secondary hover:text-primary hover:border-brand-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border border-[#002147]/20 bg-white dark:bg-black/20 text-[#002147] dark:text-white hover:border-[#002147]/40 shadow-sm hover:shadow-md hover:-translate-y-0.5"
         >
-          <Share2 size={14} />
+          <Share2 size={16} />
           Share
         </button>
       </div>

@@ -22,25 +22,27 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-custom bg-base/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group shrink-0 relative z-10">
-          <img src="/logo.png" alt="Verse Canva" className="w-8 h-8 object-contain" />
-          <span className="font-display font-semibold text-lg text-primary tracking-tight">Verse Canva</span>
+        <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-10">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-[0_2px_10px_rgba(0,33,71,0.08)] border border-[#002147]/10 transition-transform group-hover:scale-105 group-hover:shadow-[0_4px_14px_rgba(0,33,71,0.12)]">
+            <img src="/logo.png" alt="Verse Canva Icon" className="w-[180%] h-[180%] object-cover object-top -translate-y-1" />
+          </div>
+          <span className="font-display font-semibold text-xl md:text-2xl text-[#002147] dark:text-white tracking-tight">Verse Canva</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+        <nav className="hidden md:flex items-center gap-1.5 absolute left-1/2 -translate-x-1/2">
           {links.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
               to={to}
               className={cn(
-                'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all',
+                'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300',
                 location.pathname === to
-                  ? 'bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-400'
-                  : 'text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
+                  ? 'bg-[#002147] text-white shadow-md'
+                  : 'text-secondary hover:text-[#002147] hover:bg-[#002147]/5 dark:hover:bg-white/10 dark:hover:text-white'
               )}
             >
-              <Icon size={15} />
+              <Icon size={16} />
               {label}
             </Link>
           ))}
@@ -86,26 +88,26 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden border-t border-custom bg-base/95 backdrop-blur-xl"
+            className="md:hidden overflow-hidden border-t border-custom bg-white dark:bg-black/95 shadow-xl absolute w-full left-0"
           >
-            <div className="px-4 py-3 space-y-1">
+            <div className="px-5 py-6 flex flex-col gap-2">
               {links.map(({ to, label, icon: Icon }) => (
                 <Link
                   key={to}
                   to={to}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                    'flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all',
                     location.pathname === to
-                      ? 'bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-400'
-                      : 'text-secondary hover:text-primary hover:bg-black/5 dark:hover:bg-white/5'
+                      ? 'bg-[#002147] text-white shadow-md'
+                      : 'text-secondary hover:text-[#002147] hover:bg-[#002147]/5 dark:hover:bg-white/10 dark:hover:text-white'
                   )}
                 >
-                  <Icon size={16} />
+                  <Icon size={18} />
                   {label}
                 </Link>
               ))}
-              <div className="pt-2 border-t border-custom mt-2">
+              <div className="pt-4 border-t border-custom mt-2">
                 <select
                   value={version}
                   onChange={e => setVersion(e.target.value)}
