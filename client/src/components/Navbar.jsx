@@ -22,11 +22,10 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-custom bg-base/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-10">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-[0_2px_10px_rgba(0,33,71,0.08)] border border-[#002147]/10 transition-transform group-hover:scale-105 group-hover:shadow-[0_4px_14px_rgba(0,33,71,0.12)]">
-            <img src="/logo.png" alt="Verse Canva Icon" className="w-[180%] h-[180%] object-cover object-top -translate-y-1" />
+        <Link to="/" className="flex items-center group shrink-0 relative z-10">
+          <div className="h-10 md:h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,33,71,0.08)] border border-[#002147]/10 p-2 transition-transform group-hover:scale-105 group-hover:shadow-[0_4px_14px_rgba(0,33,71,0.12)] flex items-center justify-center">
+            <img src="/logo.png" alt="Verse Canva" className="h-full w-auto object-contain max-w-full" />
           </div>
-          <span className="font-display font-semibold text-xl md:text-2xl text-[#002147] dark:text-white tracking-tight">Verse Canva</span>
         </Link>
 
         {/* Desktop Nav */}

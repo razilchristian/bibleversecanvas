@@ -66,8 +66,8 @@ export default function HomePage() {
           Daily Reading
         </div>
         
-        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-lg border border-[#002147]/10 mb-6 relative z-10">
-          <img src="/logo.png" alt="Verse Canva Logo" className="w-[180%] h-[180%] object-cover object-top -translate-y-1" />
+        <div className="w-28 md:w-40 bg-white shadow-xl border border-[#002147]/10 p-3 rounded-2xl mb-8 relative z-10 flex items-center justify-center">
+          <img src="/logo.png" alt="Verse Canva Logo" className="w-full h-auto object-contain" />
         </div>
 
         <h1 className="text-5xl sm:text-7xl font-display font-bold text-[#002147] dark:text-white leading-tight mb-4 tracking-tight drop-shadow-sm relative z-10">

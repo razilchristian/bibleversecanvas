@@ -205,9 +205,8 @@ export default function PosterGenerator({ verse }) {
               </div>
 
               {/* Watermark */}
-              <div className={cn('mt-8 flex flex-col items-center gap-1.5 opacity-50', textCls)}>
-                <img src="/logo.png" alt="Verse Canva" className={cn('w-6 h-6 object-contain', textColor === 'light' ? 'brightness-0 invert' : 'brightness-0')} />
-                <span className="text-[10px] uppercase tracking-[0.2em] font-sans font-medium">Verse Canva</span>
+              <div className={cn('mt-8 flex justify-center opacity-60', textCls)}>
+                <img src="/logo.png" alt="Verse Canva" className={cn('h-6 w-auto object-contain', textColor === 'light' ? 'brightness-0 invert' : 'brightness-0')} />
               </div>
             </div>
           </div>

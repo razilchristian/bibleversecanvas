@@ -22,9 +22,8 @@ export default function App() {
           </main>
           <footer className="mt-16 py-12 text-center bg-[#002147] text-white">
             <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-              <div className="flex items-center gap-3 mb-4">
-                <img src="/logo.png" alt="Verse Canva" className="w-8 h-8 object-contain brightness-0 invert" />
-                <span className="font-display font-semibold text-xl tracking-wide">Verse Canva</span>
+              <div className="flex justify-center mb-6">
+                <img src="/logo.png" alt="Verse Canva" className="h-10 w-auto object-contain brightness-0 invert opacity-90" />
               </div>
               <p className="text-white/80 font-light mb-6">Read, Search & Share God's Word Beautifully</p>
               <div className="w-16 h-px bg-white/20 mb-6"></div>
